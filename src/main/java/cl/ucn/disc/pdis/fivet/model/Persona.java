@@ -19,41 +19,63 @@
 
 package cl.ucn.disc.pdis.fivet.model;
 
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
+
 /**
  * The model of the persona object
  *
  * @author Sebastiàn Rojas
  */
-public final class Persona extends Entity {
+@DatabaseTable(tableName = "persona")
+public final class Persona{
+
+    /**
+     * The id: Primary Key and autoincrement.
+     */
+    @DatabaseField(generatedId = true)
+    private Long id;
 
     /**
      * The nombre of the person
      */
+    @DatabaseField(canBeNull = false)
     private String nombre;
+
+    /**
+     * The Apellido of the person
+     */
+    @DatabaseField(canBeNull = false)
+    private String apellido;
 
     /**
      * The direccion of the person
      */
+    @DatabaseField(canBeNull = false)
     private String direccion;
 
     /**
      * The person's mobile phone number
      */
+    @DatabaseField(canBeNull = false)
     private Integer telefonoMovil;
 
     /**
      * The person's landline number
      */
+    @DatabaseField(canBeNull = false)
     private Integer telefonoFijo;
 
     /**
      * The email of the person
      */
+    @DatabaseField(canBeNull = false)
     private String email;
 
     /**
      * The rut of the person
      */
+    @DatabaseField(canBeNull = false, index = true)
     private String rut;
 
     /**
@@ -72,7 +94,7 @@ public final class Persona extends Entity {
      * @param email The email
      * @param rut The rut
      */
-    public Persona(String nombre, String direccion, Integer telefonoMovil, Integer telefonoFijo,
+    public Persona(String nombre, String apellido, String direccion, Integer telefonoMovil, Integer telefonoFijo,
                    String email, String rut) {
 
         this.nombre = nombre;
@@ -84,8 +106,16 @@ public final class Persona extends Entity {
 
     }
 
+    public Long getId() {
+        return this.id;
+    }
+
     public String getNombre() {
         return this.nombre;
+    }
+
+    public String getApellido() {
+        return this.apellido;
     }
 
     public String getDireccion() {

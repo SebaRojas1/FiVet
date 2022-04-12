@@ -31,12 +31,12 @@ public class Examen extends Entity {
     /**
      * The nombre of the examen
      */
-    private final String nombre;
+    private String nombre;
 
     /**
      * The date the test was taken
      */
-    private final Date fecha;
+    private Date fecha;
 
     /**
      * Empty constructor required.

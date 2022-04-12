@@ -31,42 +31,42 @@ public final class FichaMedica extends Entity {
     /**
      * The number of the record card
      */
-    private final Integer numeroFicha;
+    private Integer numeroFicha;
 
     /**
      * The patient's name
      */
-    private final String nombrePaciente;
+    private String nombrePaciente;
 
     /**
      * The especie of the patient
      */
-    private final String especie;
+    private String especie;
 
     /**
      * The date of birth of the patient
      */
-    private final Date fechaNacimiento;
+    private Date fechaNacimiento;
 
     /**
      * The raza of the patient
      */
-    private final String raza;
+    private String raza;
 
     /**
      * The sexo of the patient
      */
-    private final Character sexo;
+    private Character sexo;
 
     /**
      * The color of the patient
      */
-    private final String color;
+    private String color;
 
     /**
      * The tipo of animal
      */
-    private final String tipo;
+    private String tipo;
 
     /**
      * Empty constructor required.

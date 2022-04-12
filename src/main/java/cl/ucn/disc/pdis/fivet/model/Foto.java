@@ -27,9 +27,9 @@ package cl.ucn.disc.pdis.fivet.model;
 public class Foto extends Entity {
 
     /**
-     * The URL of the image
+     * The Url of the image
      */
-    private final String URL;
+    private String url;
 
     /**
      * Empty constructor required.
@@ -40,15 +40,15 @@ public class Foto extends Entity {
 
     /**
      * The constructor of the Foto
-     * @param URL The URL
+     * @param url The Url
      */
-    public Foto(String URL) {
+    public Foto(String url) {
 
-        this.URL = URL;
+        this.url = url;
 
     }
 
-    public String getURL() {
-        return this.URL;
+    public String getUrl() {
+        return this.url;
     }
 }

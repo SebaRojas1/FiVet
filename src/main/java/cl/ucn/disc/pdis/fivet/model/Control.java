@@ -31,37 +31,37 @@ public class Control extends Entity {
     /**
      * The fecha of the control carried out
      */
-    private final Date fecha;
+    private Date fecha;
 
     /**
      * The patient's temperatura in the control
      */
-    private final Float temperatura;
+    private Float temperatura;
 
     /**
      * The peso of the patient in the control
      */
-    private final Float peso;
+    private Float peso;
 
     /**
      * The altura of the patient in the control
      */
-    private final Float altura;
+    private Float altura;
 
     /**
      * The patient's diagnostico
      */
-    private final String diagnostico;
+    private String diagnostico;
 
     /**
      * The vet's name
      */
-    private final String nomVeterinario;
+    private String nomVeterinario;
 
     /**
      * The date of the next control
      */
-    private final Date siguienteFecha;
+    private Date siguienteFecha;
 
     /**
      * The constructor of control
