@@ -22,7 +22,7 @@ package cl.ucn.disc.pdis.fivet.model;
 import java.time.LocalDateTime;
 
 /**
- * The model of the entity objects.
+ * The model of the entity objects
  *
  * @author Sebastiàn Rojas
  */
@@ -31,7 +31,7 @@ public abstract class Entity {
     /**
      * The id of the entity
      */
-    protected final Integer id;
+    protected Integer id;
 
     /**
      * date and time of the entity deleted
@@ -41,12 +41,12 @@ public abstract class Entity {
     /**
      * date and time of the entity created
      */
-    protected final LocalDateTime createdAt;
+    protected LocalDateTime createdAt;
 
     /**
      * Void constructor required
      */
-    public Entity(){
+    Entity() {
 
     }
 
@@ -56,7 +56,7 @@ public abstract class Entity {
      * @param deletedAt datetime of the deleted entity
      * @param createdAt datetime of the created entity
      */
-    public Entity(Integer id, LocalDateTime deletedAt, LocalDateTime createdAt){
+    public Entity(Integer id, LocalDateTime deletedAt, LocalDateTime createdAt) {
 
         this.id = id;
         this.deletedAt = deletedAt;

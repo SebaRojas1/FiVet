@@ -2,7 +2,7 @@
  * Copyright (c) 2022 Sebastián Rojas Rodriguez sebastian.rojas04@alumnos.ucn.cl
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
- * and associated documentation files (the "Software"), to deal in the Software without
+ * and associated documentation files (the "Software"), to deal in the Software without 
  * restriction, including without limitation the rights to use, copy, modify, merge, publish,
  * distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the
  * Software is furnished to do so, subject to the following conditions:
@@ -23,95 +23,105 @@ import java.util.Date;
 
 /**
  * The model of the control object created for the patients
+ *
+ * @author Sebastiàn Rojas
  */
-public class Control extends Entity{
+public class Control extends Entity {
 
     /**
-     * The date of the control carried out
+     * The fecha of the control carried out
      */
-    private final Date controlDate;
+    private final Date fecha;
 
     /**
-     * The patient's temperature in the control
+     * The patient's temperatura in the control
      */
-    private final Float temperature;
+    private final Float temperatura;
 
     /**
-     * The weight of the patient in the control
+     * The peso of the patient in the control
      */
-    private final Float weight;
+    private final Float peso;
 
     /**
-     * the height of the patient in the control
+     * The altura of the patient in the control
      */
-    private final Float height;
+    private final Float altura;
 
     /**
-     * The patient's diagnosis
+     * The patient's diagnostico
      */
-    private final String diagnosis;
+    private final String diagnostico;
 
     /**
      * The vet's name
      */
-    private final String veterinariamName;
+    private final String nomVeterinario;
 
     /**
      * The date of the next control
      */
-    private final Date nextControlDate;
+    private final Date siguienteFecha;
 
     /**
      * The constructor of control
-     * @param controlDate The control date
-     * @param temperature The temperature
-     * @param weight The weight
-     * @param height The height
-     * @param diagnosis The diagnosis
-     * @param veterinariamName The name of veterinarian
-     * @param nextControlDate The next control date
+     * @param fecha The control date
+     * @param temperatura The temperatura
+     * @param peso The peso
+     * @param altura The altura
+     * @param diagnostico The diagnostico
+     * @param nomVeterinario The name of veterinarian
+     * @param siguienteFecha The next control date
      */
-    public Control(Date controlDate, Float temperature, Float weight, Float height, String diagnosis,
-                   String veterinariamName, Date nextControlDate){
+
+    /**
+     * Empty constructor required.
+     */
+    Control() {
+
+    }
+
+    public Control(Date fecha, Float temperatura, Float peso, Float altura, String diagnostico,
+                   String nomVeterinario, Date siguienteFecha) {
 
         super();
 
-        this.controlDate = controlDate;
-        this.temperature = temperature;
-        this.weight = weight;
-        this.height = height;
-        this.diagnosis = diagnosis;
-        this.veterinariamName = veterinariamName;
-        this.nextControlDate = nextControlDate;
+        this.fecha = fecha;
+        this.temperatura = temperatura;
+        this.peso = peso;
+        this.altura = altura;
+        this.diagnostico = diagnostico;
+        this.nomVeterinario = nomVeterinario;
+        this.siguienteFecha = siguienteFecha;
 
     }
 
-    public Date getControlDate() {
-        return this.controlDate;
+    public Date getFecha() {
+        return this.fecha;
     }
 
-    public Float getTemperature() {
-        return this.temperature;
+    public Float getTemperatura() {
+        return this.temperatura;
     }
 
-    public Float getWeight() {
-        return this.weight;
+    public Float getPeso() {
+        return this.peso;
     }
 
-    public Float getHeight() {
-        return this.height;
+    public Float getAltura() {
+        return this.altura;
     }
 
-    public String getDiagnosis() {
-        return this.diagnosis;
+    public String getDiagnostico() {
+        return this.diagnostico;
     }
 
-    public String getVeterinariamName() {
-        return this.veterinariamName;
+    public String getNomVeterinario() {
+        return this.nomVeterinario;
     }
 
-    public Date getNextControlDate() {
-        return this.nextControlDate;
+    public Date getSiguienteFecha() {
+        return this.siguienteFecha;
     }
 
 

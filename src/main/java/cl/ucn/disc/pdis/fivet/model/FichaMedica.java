@@ -23,38 +23,40 @@ import java.util.Date;
 
 /**
  * The model of the FichaMedica object
+ *
+ * @author Sebastiàn Rojas
  */
-public final class FichaMedica extends Entity{
+public final class FichaMedica extends Entity {
 
     /**
      * The number of the record card
      */
-    private final Integer recordCardNumber;
+    private final Integer numeroFicha;
 
     /**
      * The patient's name
      */
-    private final String patientName;
+    private final String nombrePaciente;
 
     /**
-     * The species of the patient
+     * The especie of the patient
      */
-    private final String species;
+    private final String especie;
 
     /**
      * The date of birth of the patient
      */
-    private final Date birthday;
+    private final Date fechaNacimiento;
 
     /**
-     * The race of the patient
+     * The raza of the patient
      */
-    private final String race;
+    private final String raza;
 
     /**
-     * The sex of the patient
+     * The sexo of the patient
      */
-    private final Character sex;
+    private final Character sexo;
 
     /**
      * The color of the patient
@@ -62,65 +64,72 @@ public final class FichaMedica extends Entity{
     private final String color;
 
     /**
-     * The patient's type of animal
+     * The tipo of animal
      */
-    private final String type;
+    private final String tipo;
+
+    /**
+     * Empty constructor required.
+     */
+    FichaMedica() {
+
+    }
 
     /**
      * The constructor of the FichaMedica
-     * @param recordCardNumber The record card number
-     * @param patientName The patient's name
-     * @param species The species
-     * @param birthday The birthday
-     * @param race The race
-     * @param sex The sex
+     * @param numeroFicha The record card number
+     * @param nombrePaciente The patient's name
+     * @param especie The species
+     * @param fechaNacimiento The birthday
+     * @param raza The race
+     * @param sexo The sex
      * @param color The color
-     * @param type The type of animal
+     * @param tipo The type of animal
      */
-    public FichaMedica(Integer recordCardNumber, String patientName, String species, Date birthday, String race,
-                       Character sex, String color, String type) {
+    public FichaMedica(Integer numeroFicha, String nombrePaciente, String especie, Date fechaNacimiento, String raza,
+                       Character sexo, String color, String tipo) {
 
-        this.recordCardNumber = recordCardNumber;
-        this.patientName = patientName;
-        this.species = species;
-        this.birthday = birthday;
-        this.race = race;
-        this.sex = sex;
+        this.numeroFicha = numeroFicha;
+        this.nombrePaciente = nombrePaciente;
+        this.especie = especie;
+        this.fechaNacimiento = fechaNacimiento;
+        this.raza = raza;
+        this.sexo = sexo;
         this.color = color;
-        this.type = type;
+        this.tipo = tipo;
 
     }
 
-    public Integer getrecordCardNumber() {
-        return this.recordCardNumber;
+    public Integer getNumeroFicha() {
+        return this.numeroFicha;
     }
 
-    public String getPatientName() {
-        return this.patientName;
+    public String getNombrePaciente() {
+        return this.nombrePaciente;
     }
 
-    public String getSpecies() {
-        return this.species;
+    public String getEspecie() {
+        return this.especie;
     }
 
-    public Date getBirthday() {
-        return this.birthday;
+    public Date getFechaNacimiento() {
+        return this.fechaNacimiento;
     }
 
-    public String getRace() {
-        return this.race;
+    public String getRaza() {
+        return this.raza;
     }
 
-    public Character getSex() {
-        return this.sex;
+    public Character getSexo() {
+        return this.sexo;
     }
 
     public String getColor() {
         return this.color;
     }
 
-    public String getType() {
-        return this.type;
+    public String getTipo() {
+        return this.tipo;
     }
 
 }

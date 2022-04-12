@@ -20,75 +20,84 @@
 package cl.ucn.disc.pdis.fivet.model;
 
 /**
- * The model of the persona object.
+ * The model of the persona object
+ *
+ * @author Sebastiàn Rojas
  */
-public final class Persona extends Entity{
+public final class Persona extends Entity {
 
     /**
-     * The name of the person
+     * The nombre of the person
      */
-    private final String name;
+    private String nombre;
 
     /**
-     * The address of the person
+     * The direccion of the person
      */
-    private final String address;
+    private String direccion;
 
     /**
      * The person's mobile phone number
      */
-    private final Integer mobilePhoneNumber;
+    private Integer telefonoMovil;
 
     /**
      * The person's landline number
      */
-    private final Integer landlinePhoneNumber;
+    private Integer telefonoFijo;
 
     /**
      * The email of the person
      */
-    private final String email;
+    private String email;
 
     /**
      * The rut of the person
      */
-    private final String rut;
+    private String rut;
+
+    /**
+     * Empty constructor required.
+     */
+    Persona() {
+
+    }
 
     /**
      * The constructor of the Persona
-     * @param name The name
-     * @param address The address
-     * @param mobilePhoneNumber The mobile number
-     * @param landlinePhoneNumber The landline number
+     * @param nombre The name
+     * @param direccion The address
+     * @param telefonoMovil The mobile number
+     * @param telefonoFijo The landline number
      * @param email The email
      * @param rut The rut
      */
-    public Persona(String name, String address, Integer mobilePhoneNumber, Integer landlinePhoneNumber,
+    public Persona(String nombre, String direccion, Integer telefonoMovil, Integer telefonoFijo,
                    String email, String rut) {
 
-        this.name = name;
-        this.address = address;
-        this.mobilePhoneNumber = mobilePhoneNumber;
-        this.landlinePhoneNumber = landlinePhoneNumber;
+        this.nombre = nombre;
+        this.direccion = direccion;
+        this.telefonoMovil = telefonoMovil;
+        this.telefonoFijo = telefonoFijo;
         this.email = email;
         this.rut = rut;
 
     }
 
-    public String getName() {
-        return this.name;
+    public String getNombre() {
+        return this.nombre;
     }
 
-    public String getAddress() {
-        return this.address;
+    public String getDireccion() {
+        return this.direccion;
     }
 
-    public Integer getMobilePhoneNumber() {
-        return this.mobilePhoneNumber;
+    public Integer getTelefonoMovil() {
+        return this.telefonoMovil;
     }
 
-    public Integer getLandlinePhoneNumber() {
-        return this.landlinePhoneNumber;
+    public Integer getTelefonoFijo() {
+        return this.telefonoFijo;
     }
 
     public String getEmail() {

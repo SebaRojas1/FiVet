@@ -21,13 +21,22 @@ package cl.ucn.disc.pdis.fivet.model;
 
 /**
  * The model of the Foto object
+ *
+ * @author Sebastiàn Rojas
  */
-public class Foto extends Entity{
+public class Foto extends Entity {
 
     /**
      * The URL of the image
      */
     private final String URL;
+
+    /**
+     * Empty constructor required.
+     */
+    Foto() {
+
+    }
 
     /**
      * The constructor of the Foto

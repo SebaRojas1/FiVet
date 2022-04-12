@@ -23,36 +23,45 @@ import java.util.Date;
 
 /**
  * The model of the examen object
+ *
+ * @author Sebastiàn Rojas
  */
-public class Examen extends Entity{
+public class Examen extends Entity {
 
     /**
-     * The name of the examen
+     * The nombre of the examen
      */
-    private final String name;
+    private final String nombre;
 
     /**
      * The date the test was taken
      */
-    private final Date examDate;
+    private final Date fecha;
+
+    /**
+     * Empty constructor required.
+     */
+    Examen() {
+
+    }
 
     /**
      * The constructor of the examen
-     * @param name The name
-     * @param examDate The exam date
+     * @param nombre The nombre
+     * @param fecha The exam date
      */
-    public Examen(String name, Date examDate) {
+    public Examen(String nombre, Date fecha) {
 
-        this.name = name;
-        this.examDate = examDate;
+        this.nombre = nombre;
+        this.fecha = fecha;
 
     }
 
-    public String getName() {
-        return this.name;
+    public String getNombre() {
+        return this.nombre;
     }
 
-    public Date getExamDate() {
-        return this.examDate;
+    public Date getFecha() {
+        return this.fecha;
     }
 }
