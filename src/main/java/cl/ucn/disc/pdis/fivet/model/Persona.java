@@ -25,43 +25,43 @@ package cl.ucn.disc.pdis.fivet.model;
 public final class Persona extends Entity{
 
     /**
-     *
+     * The name of the person
      */
     private final String name;
 
     /**
-     *
+     * The address of the person
      */
     private final String address;
 
     /**
-     *
+     * The person's mobile phone number
      */
     private final Integer mobilePhoneNumber;
 
     /**
-     *
+     * The person's landline number
      */
     private final Integer landlinePhoneNumber;
 
     /**
-     *
+     * The email of the person
      */
     private final String email;
 
     /**
-     *
+     * The rut of the person
      */
     private final String rut;
 
     /**
-     *
-     * @param name
-     * @param address
-     * @param mobilePhoneNumber
-     * @param landlinePhoneNumber
-     * @param email
-     * @param rut
+     * The constructor of the Persona
+     * @param name The name
+     * @param address The address
+     * @param mobilePhoneNumber The mobile number
+     * @param landlinePhoneNumber The landline number
+     * @param email The email
+     * @param rut The rut
      */
     public Persona(String name, String address, Integer mobilePhoneNumber, Integer landlinePhoneNumber,
                    String email, String rut) {

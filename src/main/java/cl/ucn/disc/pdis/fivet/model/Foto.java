@@ -20,18 +20,18 @@
 package cl.ucn.disc.pdis.fivet.model;
 
 /**
- *
+ * The model of the Foto object
  */
 public class Foto extends Entity{
 
     /**
-     *
+     * The URL of the image
      */
     private final String URL;
 
     /**
-     *
-     * @param URL
+     * The constructor of the Foto
+     * @param URL The URL
      */
     public Foto(String URL) {
 

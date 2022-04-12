@@ -22,24 +22,24 @@ package cl.ucn.disc.pdis.fivet.model;
 import java.util.Date;
 
 /**
- *
+ * The model of the examen object
  */
 public class Examen extends Entity{
 
     /**
-     *
+     * The name of the examen
      */
     private final String name;
 
     /**
-     *
+     * The date the test was taken
      */
     private final Date examDate;
 
     /**
-     *
-     * @param name
-     * @param examDate
+     * The constructor of the examen
+     * @param name The name
+     * @param examDate The exam date
      */
     public Examen(String name, Date examDate) {
 

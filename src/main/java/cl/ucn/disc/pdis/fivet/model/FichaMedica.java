@@ -22,65 +22,65 @@ package cl.ucn.disc.pdis.fivet.model;
 import java.util.Date;
 
 /**
- *
+ * The model of the FichaMedica object
  */
 public final class FichaMedica extends Entity{
 
     /**
-     *
+     * The number of the record card
      */
-    private final Integer indexCardNumber;
+    private final Integer recordCardNumber;
 
     /**
-     *
+     * The patient's name
      */
     private final String patientName;
 
     /**
-     *
+     * The species of the patient
      */
     private final String species;
 
     /**
-     *
+     * The date of birth of the patient
      */
     private final Date birthday;
 
     /**
-     *
+     * The race of the patient
      */
     private final String race;
 
     /**
-     *
+     * The sex of the patient
      */
     private final Character sex;
 
     /**
-     *
+     * The color of the patient
      */
     private final String color;
 
     /**
-     *
+     * The patient's type of animal
      */
     private final String type;
 
     /**
-     *
-     * @param indexCardNumber
-     * @param patientName
-     * @param species
-     * @param birthday
-     * @param race
-     * @param sex
-     * @param color
-     * @param type
+     * The constructor of the FichaMedica
+     * @param recordCardNumber The record card number
+     * @param patientName The patient's name
+     * @param species The species
+     * @param birthday The birthday
+     * @param race The race
+     * @param sex The sex
+     * @param color The color
+     * @param type The type of animal
      */
-    public FichaMedica(Integer indexCardNumber, String patientName, String species, Date birthday, String race,
+    public FichaMedica(Integer recordCardNumber, String patientName, String species, Date birthday, String race,
                        Character sex, String color, String type) {
 
-        this.indexCardNumber = indexCardNumber;
+        this.recordCardNumber = recordCardNumber;
         this.patientName = patientName;
         this.species = species;
         this.birthday = birthday;
@@ -91,8 +91,8 @@ public final class FichaMedica extends Entity{
 
     }
 
-    public Integer getIndexCardNumber() {
-        return this.indexCardNumber;
+    public Integer getrecordCardNumber() {
+        return this.recordCardNumber;
     }
 
     public String getPatientName() {
