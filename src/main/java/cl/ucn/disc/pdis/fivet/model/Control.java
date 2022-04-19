@@ -19,110 +19,74 @@
 
 package cl.ucn.disc.pdis.fivet.model;
 
-import java.util.Date;
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+import java.time.ZonedDateTime;
+
 
 /**
  * The model of the control object created for the patients
  *
  * @author Sebastiàn Rojas
  */
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@DatabaseTable(tableName = "control")
 public class Control extends Entity {
 
     /**
      * The fecha of the control carried out
      */
-    private Date fecha;
+    @Getter
+    @DatabaseField(canBeNull = false)
+    private ZonedDateTime fecha;
 
     /**
      * The patient's temperatura in the control
      */
+    @Getter
+    @DatabaseField(canBeNull = false)
     private Float temperatura;
 
     /**
      * The peso of the patient in the control
      */
+    @Getter
+    @DatabaseField(canBeNull = false)
     private Float peso;
 
     /**
      * The altura of the patient in the control
      */
+    @Getter
+    @DatabaseField(canBeNull = false)
     private Float altura;
 
     /**
      * The patient's diagnostico
      */
+    @Getter
+    @DatabaseField(canBeNull = false)
     private String diagnostico;
 
     /**
      * The vet's name
      */
+    @Getter
+    @DatabaseField(canBeNull = false)
     private String nomVeterinario;
 
     /**
      * The date of the next control
      */
-    private Date siguienteFecha;
-
-    /**
-     * The constructor of control
-     * @param fecha The control date
-     * @param temperatura The temperatura
-     * @param peso The peso
-     * @param altura The altura
-     * @param diagnostico The diagnostico
-     * @param nomVeterinario The name of veterinarian
-     * @param siguienteFecha The next control date
-     */
-
-    /**
-     * Empty constructor required.
-     */
-    Control() {
-
-    }
-
-    public Control(Date fecha, Float temperatura, Float peso, Float altura, String diagnostico,
-                   String nomVeterinario, Date siguienteFecha) {
-
-        super();
-
-        this.fecha = fecha;
-        this.temperatura = temperatura;
-        this.peso = peso;
-        this.altura = altura;
-        this.diagnostico = diagnostico;
-        this.nomVeterinario = nomVeterinario;
-        this.siguienteFecha = siguienteFecha;
-
-    }
-
-    public Date getFecha() {
-        return this.fecha;
-    }
-
-    public Float getTemperatura() {
-        return this.temperatura;
-    }
-
-    public Float getPeso() {
-        return this.peso;
-    }
-
-    public Float getAltura() {
-        return this.altura;
-    }
-
-    public String getDiagnostico() {
-        return this.diagnostico;
-    }
-
-    public String getNomVeterinario() {
-        return this.nomVeterinario;
-    }
-
-    public Date getSiguienteFecha() {
-        return this.siguienteFecha;
-    }
-
+    @Getter
+    @DatabaseField(canBeNull = false)
+    private ZonedDateTime siguienteFecha;
 
 }

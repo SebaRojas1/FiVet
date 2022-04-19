@@ -50,6 +50,9 @@ class testDatabase {
 
             Dao<Persona, Long> daoPersona = DaoManager.createDao(connectionSource, Persona.class);
 
+            Persona persona = new Persona();
+
+            //TODO: arreglar la instancia de la clase persona y los assertions
             Persona persona = new Persona("Sebastian", "Rojas", "arturo prat 111", 1111111,
                     22222222, "test@gmail.com", "20.218.430-8");
 

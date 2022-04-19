@@ -19,36 +19,30 @@
 
 package cl.ucn.disc.pdis.fivet.model;
 
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
 /**
  * The model of the Foto object
  *
  * @author Sebastiàn Rojas
  */
-public class Foto extends Entity {
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@DatabaseTable(tableName = "foto")
+public final class Foto extends Entity {
 
     /**
      * The Url of the image
      */
+    @Getter
+    @DatabaseField(canBeNull = false)
     private String url;
 
-    /**
-     * Empty constructor required.
-     */
-    Foto() {
 
-    }
-
-    /**
-     * The constructor of the Foto
-     * @param url The Url
-     */
-    public Foto(String url) {
-
-        this.url = url;
-
-    }
-
-    public String getUrl() {
-        return this.url;
-    }
 }

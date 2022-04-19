@@ -19,117 +19,80 @@
 
 package cl.ucn.disc.pdis.fivet.model;
 
-import java.util.Date;
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+import java.time.ZonedDateTime;
 
 /**
  * The model of the FichaMedica object
  *
  * @author Sebastiàn Rojas
  */
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@DatabaseTable(tableName = "ficha_medica")
 public final class FichaMedica extends Entity {
 
     /**
      * The number of the record card
      */
+    @Getter
+    @DatabaseField(canBeNull = false, unique = true)
     private Integer numeroFicha;
 
     /**
      * The patient's name
      */
+    @Getter
+    @DatabaseField(canBeNull = false)
     private String nombrePaciente;
 
     /**
      * The especie of the patient
      */
+    @Getter
+    @DatabaseField(canBeNull = false)
     private String especie;
 
     /**
      * The date of birth of the patient
      */
-    private Date fechaNacimiento;
+    @Getter
+    @DatabaseField(canBeNull = false)
+    private ZonedDateTime fechaNacimiento;
 
     /**
      * The raza of the patient
      */
+    @Getter
+    @DatabaseField(canBeNull = false)
     private String raza;
 
     /**
      * The sexo of the patient
      */
+    @Getter
+    @DatabaseField(canBeNull = false)
     private Character sexo;
 
     /**
      * The color of the patient
      */
+    @Getter
+    @DatabaseField(canBeNull = false)
     private String color;
 
     /**
      * The tipo of animal
      */
+    @Getter
+    @DatabaseField(canBeNull = false)
     private String tipo;
-
-    /**
-     * Empty constructor required.
-     */
-    FichaMedica() {
-
-    }
-
-    /**
-     * The constructor of the FichaMedica
-     * @param numeroFicha The record card number
-     * @param nombrePaciente The patient's name
-     * @param especie The species
-     * @param fechaNacimiento The birthday
-     * @param raza The race
-     * @param sexo The sex
-     * @param color The color
-     * @param tipo The type of animal
-     */
-    public FichaMedica(Integer numeroFicha, String nombrePaciente, String especie, Date fechaNacimiento, String raza,
-                       Character sexo, String color, String tipo) {
-
-        this.numeroFicha = numeroFicha;
-        this.nombrePaciente = nombrePaciente;
-        this.especie = especie;
-        this.fechaNacimiento = fechaNacimiento;
-        this.raza = raza;
-        this.sexo = sexo;
-        this.color = color;
-        this.tipo = tipo;
-
-    }
-
-    public Integer getNumeroFicha() {
-        return this.numeroFicha;
-    }
-
-    public String getNombrePaciente() {
-        return this.nombrePaciente;
-    }
-
-    public String getEspecie() {
-        return this.especie;
-    }
-
-    public Date getFechaNacimiento() {
-        return this.fechaNacimiento;
-    }
-
-    public String getRaza() {
-        return this.raza;
-    }
-
-    public Character getSexo() {
-        return this.sexo;
-    }
-
-    public String getColor() {
-        return this.color;
-    }
-
-    public String getTipo() {
-        return this.tipo;
-    }
 
 }

@@ -19,49 +19,38 @@
 
 package cl.ucn.disc.pdis.fivet.model;
 
-import java.util.Date;
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+import java.time.ZonedDateTime;
 
 /**
  * The model of the examen object
  *
  * @author Sebastiàn Rojas
  */
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@DatabaseTable(tableName = "examen")
 public class Examen extends Entity {
 
     /**
      * The nombre of the examen
      */
+    @Getter
+    @DatabaseField(canBeNull = false)
     private String nombre;
 
     /**
      * The date the test was taken
      */
-    private Date fecha;
+    @Getter
+    @DatabaseField(canBeNull = false)
+    private ZonedDateTime fecha;
 
-    /**
-     * Empty constructor required.
-     */
-    Examen() {
-
-    }
-
-    /**
-     * The constructor of the examen
-     * @param nombre The nombre
-     * @param fecha The exam date
-     */
-    public Examen(String nombre, Date fecha) {
-
-        this.nombre = nombre;
-        this.fecha = fecha;
-
-    }
-
-    public String getNombre() {
-        return this.nombre;
-    }
-
-    public Date getFecha() {
-        return this.fecha;
-    }
 }

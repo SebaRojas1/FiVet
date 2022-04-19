@@ -19,49 +19,45 @@
 
 package cl.ucn.disc.pdis.fivet.model;
 
-import java.time.LocalDateTime;
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+import java.time.ZonedDateTime;
 
 /**
  * The model of the entity objects
  *
  * @author Sebastiàn Rojas
  */
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@DatabaseTable(tableName = "entity")
 public abstract class Entity {
 
     /**
      * The id of the entity
      */
-    protected Integer id;
+    @Getter
+    @DatabaseField(generatedId = true)
+    private Integer id;
 
     /**
      * date and time of the entity deleted
      */
-    protected LocalDateTime deletedAt;
+    @Getter
+    @DatabaseField
+    private ZonedDateTime deletedAt;
 
     /**
      * date and time of the entity created
      */
-    protected LocalDateTime createdAt;
-
-    /**
-     * Void constructor required
-     */
-    Entity() {
-
-    }
-
-    /**
-     * The constructor of entity
-     * @param id The id of the entity
-     * @param deletedAt datetime of the deleted entity
-     * @param createdAt datetime of the created entity
-     */
-    public Entity(Integer id, LocalDateTime deletedAt, LocalDateTime createdAt) {
-
-        this.id = id;
-        this.deletedAt = deletedAt;
-        this.createdAt = createdAt;
-
-    }
+    @Getter
+    @DatabaseField(canBeNull = false)
+    private ZonedDateTime createdAt;
 
 }
