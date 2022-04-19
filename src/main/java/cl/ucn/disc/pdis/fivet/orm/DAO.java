@@ -17,66 +17,44 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package cl.ucn.disc.pdis.fivet.model;
+package cl.ucn.disc.pdis.fivet.orm;
 
-import com.j256.ormlite.field.DatabaseField;
-import com.j256.ormlite.table.DatabaseTable;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import cl.ucn.disc.pdis.fivet.model.Entity;
 
-/**
- * The model of the persona object
- *
- * @author Sebastiàn Rojas
- */
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
-@DatabaseTable(tableName = "persona")
-public final class Persona extends Entity{
+import java.util.List;
+import java.util.Optional;
+
+public interface DAO <T extends Entity> {
 
     /**
-     * The nombre of the person
+     * Get optional, T
+     * @param id to search
+     * @return a T
      */
-    @Getter
-    @DatabaseField(canBeNull = false)
-    private String nombre;
+    Optional<T> get(Integer id);
 
     /**
-     * The direccion of the person
+     * Get all the Ts
+     * @return
      */
-    @Getter
-    @DatabaseField(canBeNull = false)
-    private String direccion;
+    List<T> getAll();
 
     /**
-     * The person's mobile phone number
+     * Save a T
+     * @param t
      */
-    @Getter
-    @DatabaseField(canBeNull = false)
-    private Integer telefonoMovil;
+    void save(T t);
 
     /**
-     * The person's landline number
+     * Delete a T
+     * @param t
      */
-    @Getter
-    @DatabaseField(canBeNull = false)
-    private Integer telefonoFijo;
+    void delete(T t);
 
     /**
-     * The email of the person
+     * Delete a T with id.
+     * @param id
      */
-    @Getter
-    @DatabaseField(canBeNull = false, unique = true)
-    private String email;
-
-    /**
-     * The rut of the person
-     */
-    @Getter
-    @DatabaseField(canBeNull = false, unique = true)
-    private String rut;
+    void delete(Integer id);
 
 }
