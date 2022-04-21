@@ -20,6 +20,7 @@
 package cl.ucn.disc.pdis.fivet.orm;
 
 import com.j256.ormlite.field.FieldType;
+import com.j256.ormlite.field.SqlType;
 import com.j256.ormlite.field.types.BaseDataType;
 import com.j256.ormlite.support.DatabaseResults;
 import lombok.extern.slf4j.Slf4j;
@@ -55,7 +56,7 @@ public final class ZonedDateTimeType extends BaseDataType {
      * The private constructor
      */
     private ZonedDateTimeType() {
-        super(sqlType.STRING, new Class<?>[]{ZonedDateTime.class});
+        super(SqlType.STRING, new Class<?>[]{ZonedDateTime.class});
     }
 
     /**
