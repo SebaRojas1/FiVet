@@ -17,7 +17,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package cl.ucn.disc.pdis.fivet.model;
+package cl.ucn.disc.pdis.fivet.orm;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
@@ -35,7 +35,6 @@ import java.time.ZonedDateTime;
  */
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 @DatabaseTable(tableName = "entity")
 public abstract class Entity {
 
@@ -44,20 +43,20 @@ public abstract class Entity {
      */
     @Getter
     @DatabaseField(generatedId = true)
-    private Integer id;
+    protected Integer id;
 
     /**
      * date and time of the entity deleted
      */
     @Getter
     @DatabaseField
-    private ZonedDateTime deletedAt;
+    protected ZonedDateTime deletedAt;
 
     /**
      * date and time of the entity created
      */
     @Getter
     @DatabaseField(canBeNull = false)
-    private ZonedDateTime createdAt;
+    protected ZonedDateTime createdAt;
 
 }

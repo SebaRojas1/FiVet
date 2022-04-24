@@ -19,6 +19,7 @@
 
 package cl.ucn.disc.pdis.fivet.model;
 
+import cl.ucn.disc.pdis.fivet.orm.Entity;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 import lombok.AllArgsConstructor;
@@ -35,7 +36,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 @DatabaseTable(tableName = "persona")
-public final class Persona extends Entity{
+public final class Persona extends Entity {
 
     /**
      * The nombre of the person

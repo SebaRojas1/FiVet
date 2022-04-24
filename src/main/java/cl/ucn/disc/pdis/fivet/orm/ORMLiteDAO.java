@@ -19,7 +19,6 @@
 
 package cl.ucn.disc.pdis.fivet.orm;
 
-import cl.ucn.disc.pdis.fivet.model.Entity;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.support.ConnectionSource;
@@ -89,11 +88,12 @@ public final class ORMLiteDAO <T extends Entity> implements DAO<T> {
      * Delete a T
      * @param t to delete
      */
-    @SneakyThrows(SQLException.class)
+    //@SneakyThrows(SQLException.class)
     @Override
     public void delete(T t) {
         this.delete(t.getId());
     }
+
 
     /**
      * Delete a T with id

@@ -17,12 +17,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package cl.ucn.disc.pdis.fivet;
+package cl.ucn.disc.pdis.fivet.orm;
 
-import cl.ucn.disc.pdis.fivet.model.Entity;
-import cl.ucn.disc.pdis.fivet.orm.DAO;
-import cl.ucn.disc.pdis.fivet.orm.ORMLiteDAO;
-import cl.ucn.disc.pdis.fivet.orm.ZonedDateTimeType;
 import com.j256.ormlite.field.DataPersisterManager;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
@@ -93,7 +89,7 @@ public class TestDAO {
                     .theBoolean(Boolean.TRUE)
                     .build();
             dao.save(theEntityA);
-            log.debug("To db: {}", ToStringBuilder.reflectionToString(theEntity, ToStringStyle.MULTI_LINE_STYLE));
+            log.debug("To db: {}", ToStringBuilder.reflectionToString(theEntityA, ToStringStyle.MULTI_LINE_STYLE));
         }
 
         //retrieve ..

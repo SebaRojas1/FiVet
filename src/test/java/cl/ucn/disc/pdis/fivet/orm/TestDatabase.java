@@ -17,7 +17,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package cl.ucn.disc.pdis.fivet;
+package cl.ucn.disc.pdis.fivet.orm;
 
 import cl.ucn.disc.pdis.fivet.model.Persona;
 import com.j256.ormlite.dao.Dao;
@@ -51,24 +51,23 @@ class TestDatabase {
             Dao<Persona, Long> daoPersona = DaoManager.createDao(connectionSource, Persona.class);
 
             Persona persona = new Persona();
-
-            //TODO: arreglar la instancia de la clase persona y los assertions
-            Persona persona = new Persona("Sebastian", "Rojas", "arturo prat 111", 1111111,
-                    22222222, "test@gmail.com", "20.218.430-8");
+            
+            persona = new Persona("Sebastian", "micasa", 111111, 2222222,
+                    "seba@gmail.com", "20.218.430-8");
 
             int tuples = daoPersona.create(persona);
-            //log.debug("Id: {}", persona.getId());
+            log.debug("Id: {}", persona.getId());
 
             Assertions.assertEquals(1, tuples, "Save tuples != 1");
 
-            Persona personaDb = daoPersona.queryForId(persona.getId());
+            Persona personaDb = daoPersona.queryForId(persona.getId().longValue());
 
             Assertions.assertEquals(persona.getNombre(), personaDb.getNombre(), "Nombre not equals!");
-            Assertions.assertEquals(persona.getApellido(), personaDb.getApellido(), "Apellido not equals!");
+            Assertions.assertEquals(persona.getEmail(), personaDb.getEmail(), "Email not equals!");
             Assertions.assertEquals(persona.getRut(), personaDb.getRut(), "Rut not equals!");
 
         } catch (Exception e) {
-            //log.debug("The error {}", e);
+            log.debug("The error {}", e);
         }
     }
 
