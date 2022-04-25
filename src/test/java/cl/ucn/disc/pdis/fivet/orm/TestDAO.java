@@ -35,6 +35,7 @@ import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
 import java.time.ZonedDateTime;
+import java.util.Optional;
 
 /**
  * Testing the DAO
@@ -102,15 +103,19 @@ public class TestDAO {
         // Fake delete ..
         log.debug("Deleting ..");
         {
-            dao.delete(1);
-            Assertions.assertThrows(SQLException.class, () -> dao.delete(10));
+            TheEntity theEntity = dao.get(1).orElseThrow();
+            dao.delete(theEntity);
         }
 
         //retrieve ..
         log.debug("Retrieving deleted entities ..");
         {
-            Assertions.assertTrue(dao.get(1).isEmpty(), "DAO 1 was not null");
-            Assertions.assertTrue(dao.get(0).isEmpty(), "DAO 1 was not null");
+            //Assertions.assertTrue(dao.get(1).isEmpty(), "DAO 1 was not null");
+            //Assertions.assertTrue(dao.get(0).isEmpty(), "DAO 1 was not null");
+            Optional<TheEntity> theEntity2 = dao.get(10);
+            Assertions.assertTrue(theEntity2.isEmpty(), "DAO 10 was not null");
+            TheEntity theEntity = dao.get(1).orElseThrow();
+            log.debug("To db: {}", ToStringBuilder.reflectionToString(theEntity, ToStringStyle.MULTI_LINE_STYLE));
         }
 
         // Drop the database

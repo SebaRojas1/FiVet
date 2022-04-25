@@ -26,6 +26,7 @@ import lombok.NonNull;
 import lombok.SneakyThrows;
 
 import java.sql.SQLException;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -85,27 +86,35 @@ public final class ORMLiteDAO <T extends Entity> implements DAO<T> {
     }
 
     /**
-     * Delete a T
+     * Delete a T adding the delete date
      * @param t to delete
      */
-    //@SneakyThrows(SQLException.class)
+    @SneakyThrows(SQLException.class)
     @Override
     public void delete(T t) {
-        this.delete(t.getId());
+        t.deletedAt = ZonedDateTime.now();
+        int deleted = this.dao.update(t);
+
+        if(deleted != 1){
+            throw new SQLException("Rows updated != 1");
+        }
     }
 
 
     /**
-     * Delete a T with id
+     * Delete a T with id adding the delete date
      * @param id of the t to delete
      */
     @SneakyThrows(SQLException.class)
     @Override
     public void delete(Integer id) {
-        int deleted = this.dao.deleteById(id);
+        T t = this.dao.queryForId(id);
+        t.deletedAt = ZonedDateTime.now();
+        int deleted = this.dao.update(t);
 
-        if(deleted != 1) {
-            throw new SQLException("Rows deleted != 1");
+
+        if(deleted != 1){
+            throw new SQLException("Rows updated != 1");
         }
     }
 
