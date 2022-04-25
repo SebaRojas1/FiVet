@@ -22,7 +22,6 @@ package cl.ucn.disc.pdis.fivet.orm;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -57,6 +56,6 @@ public abstract class Entity {
      */
     @Getter
     @DatabaseField(canBeNull = false)
-    protected ZonedDateTime createdAt;
+    protected ZonedDateTime createdAt = ZonedDateTime.now();
 
 }

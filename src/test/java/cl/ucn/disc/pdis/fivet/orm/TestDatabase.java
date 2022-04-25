@@ -22,6 +22,7 @@ package cl.ucn.disc.pdis.fivet.orm;
 import cl.ucn.disc.pdis.fivet.model.Persona;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
+import com.j256.ormlite.field.DataPersisterManager;
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
@@ -43,6 +44,9 @@ public class TestDatabase {
     public void testDatabase() throws SQLException {
         // The Database to use (in RAM Memory)
         String databaseUrl = "jdbc:h2:mem:fivet_db";
+
+        // Registering the ZonedDateTimeType
+        DataPersisterManager.registerDataPersisters(ZonedDateTimeType.INSTANCE);
 
         // Connection source: autoclose with the try/catch
         try(ConnectionSource connectionSource = new JdbcConnectionSource(databaseUrl)) {
