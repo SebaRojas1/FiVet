@@ -37,30 +37,34 @@ import java.sql.SQLException;
  * @author Sebastiàn Rojas
  */
 @Slf4j
-class TestDatabase {
+public class TestDatabase {
 
     @Test
     public void testDatabase() throws SQLException {
-
+        // The Database to use (in RAM Memory)
         String databaseUrl = "jdbc:h2:mem:fivet_db";
 
+        // Connection source: autoclose with the try/catch
         try(ConnectionSource connectionSource = new JdbcConnectionSource(databaseUrl)) {
 
+            // Create the table from Persona annotations
             TableUtils.createTableIfNotExists(connectionSource, Persona.class);
 
-            Dao<Persona, Long> daoPersona = DaoManager.createDao(connectionSource, Persona.class);
+            // The dao of Persona
+            Dao<Persona, Integer> daoPersona = DaoManager.createDao(connectionSource, Persona.class);
 
-            Persona persona = new Persona();
-            
-            persona = new Persona("Sebastian", "micasa", 111111, 2222222,
+            // New Persona
+            Persona persona = new Persona("Sebastian", "micasa", 111111, 2222222,
                     "seba@gmail.com", "20.218.430-8");
 
+            // Insert Persona into the database
             int tuples = daoPersona.create(persona);
             log.debug("Id: {}", persona.getId());
-
+            //
             Assertions.assertEquals(1, tuples, "Save tuples != 1");
 
-            Persona personaDb = daoPersona.queryForId(persona.getId().longValue());
+            // Get from db
+            Persona personaDb = daoPersona.queryForId(persona.getId());
 
             Assertions.assertEquals(persona.getNombre(), personaDb.getNombre(), "Nombre not equals!");
             Assertions.assertEquals(persona.getEmail(), personaDb.getEmail(), "Email not equals!");
