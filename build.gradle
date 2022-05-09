@@ -65,6 +65,9 @@ dependencies {
     implementation 'io.grpc:grpc-protobuf:1.45.1'
     implementation 'io.grpc:grpc-stub:1.45.1'
     compileOnly 'org.apache.tomcat:annotations-api:6.0.53'
+
+    // bcrypt implementation
+    implementation 'org.springframework.security:spring-security-crypto:5.6.3'
 }
 
 protobuf {

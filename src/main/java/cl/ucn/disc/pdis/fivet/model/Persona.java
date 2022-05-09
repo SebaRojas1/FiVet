@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Sebastián Rojas Rodriguez sebastian.rojas04@alumnos.ucn.cl
+ * Copyright (c) 2022 Sebastian Rojas Rodriguez sebastian.rojas04@alumnos.ucn.cl
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
  * and associated documentation files (the "Software"), to deal in the Software without
@@ -22,15 +22,12 @@ package cl.ucn.disc.pdis.fivet.model;
 import cl.ucn.disc.pdis.fivet.orm.Entity;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 /**
  * The model of the persona object
  *
- * @author Sebastiàn Rojas
+ * @author Sebastian Rojas
  */
 @NoArgsConstructor
 @AllArgsConstructor
@@ -80,4 +77,11 @@ public final class Persona extends Entity {
     @DatabaseField(canBeNull = false, unique = true)
     private String rut;
 
+    /**
+     * The password of the persona
+     */
+    @Getter
+    @Setter
+    @DatabaseField(canBeNull = false)
+    private String password;
 }

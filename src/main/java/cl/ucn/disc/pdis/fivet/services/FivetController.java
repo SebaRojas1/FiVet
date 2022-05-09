@@ -17,50 +17,31 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package cl.ucn.disc.pdis.fivet.orm;
+package cl.ucn.disc.pdis.fivet.services;
 
-import java.util.List;
+import cl.ucn.disc.pdis.fivet.model.Persona;
+
 import java.util.Optional;
 
-public interface DAO <T extends Entity> {
+/**
+ * The Fivet Controller interface
+ */
+public interface FivetController {
 
     /**
-     * Get optional, T
-     * @param id to search
-     * @return a T
+     *
+     * @param login The login account
+     * @param password The password of the user
+     * @return a persona
      */
-    Optional<T> get(Integer id);
+    Optional<Persona> autenticar(String login, String password);
 
     /**
-     * Get optional, T
-     * @param attrib
-     * @param value
-     * @return a T
+     * add a Persona in to the backend
+     * @param persona to add
+     * @param password to hash
      */
-    Optional<T> get(String attrib, Object value);
+    void add(Persona persona, String password);
 
-    /**
-     * Get all the Ts
-     * @return
-     */
-    List<T> getAll();
-
-    /**
-     * Save a T
-     * @param t
-     */
-    void save(T t);
-
-    /**
-     * Delete a T
-     * @param t
-     */
-    void delete(T t);
-
-    /**
-     * Delete a T with id.
-     * @param id
-     */
-    void delete(Integer id);
-
+    // Ficha
 }
