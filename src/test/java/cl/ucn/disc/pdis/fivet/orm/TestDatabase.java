@@ -59,7 +59,7 @@ public class TestDatabase {
 
             // New Persona
             Persona persona = new Persona("Sebastian", "micasa", 111111, 2222222,
-                    "seba@gmail.com", "20.218.430-8");
+                    "seba@gmail.com", "20.218.430-8", "hola123");
 
             // Insert Persona into the database
             int tuples = daoPersona.create(persona);

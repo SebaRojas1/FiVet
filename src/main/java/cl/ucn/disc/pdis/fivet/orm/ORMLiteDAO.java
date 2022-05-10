@@ -28,8 +28,10 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
 import java.sql.SQLException;
+import java.sql.SQLNonTransientException;
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Slf4j
@@ -80,11 +82,10 @@ public final class ORMLiteDAO <T extends Entity> implements DAO<T> {
     public Optional<T> get(String attrib, Object value) {
         List<T> list = this.dao.queryForEq(attrib, value);
 
-        for (T t : list) {
+        for (T t : list)
             if (t.getDeletedAt() == null) {
                 return Optional.of(t);
             }
-        }
         return Optional.empty();
     }
 
@@ -127,6 +128,7 @@ public final class ORMLiteDAO <T extends Entity> implements DAO<T> {
     @SneakyThrows(SQLException.class)
     @Override
     public void delete(T t) {
+
         t.deletedAt = ZonedDateTime.now();
 
         if (this.dao.update(t) != 1) {

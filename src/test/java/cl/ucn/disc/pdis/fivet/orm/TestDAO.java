@@ -35,6 +35,8 @@ import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
 import java.time.ZonedDateTime;
+import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 /**
@@ -90,14 +92,43 @@ public class TestDAO {
                     .theBoolean(Boolean.TRUE)
                     .build();
             dao.save(theEntityA);
+
+            TheEntity theEntityB = TheEntity.builder()
+                    .theString("The String b")
+                    .theInteger(127)
+                    .theDouble(127.0)
+                    .theBoolean(Boolean.FALSE)
+                    .build();
+            dao.save(theEntityB);
             log.debug("To db: {}", ToStringBuilder.reflectionToString(theEntityA, ToStringStyle.MULTI_LINE_STYLE));
         }
+
 
         //retrieve ..
         log.debug("Retrieving ..");
         {
             TheEntity theEntity = dao.get(1).orElseThrow();
+            Assertions.assertThrowsExactly(NoSuchElementException.class, () ->{
+                dao.get(10).orElseThrow();
+            });
             log.debug("from db: {}", ToStringBuilder.reflectionToString(theEntity, ToStringStyle.MULTI_LINE_STYLE));
+        }
+
+        //  Getting ..
+        log.debug("Getting ..");
+        {
+            TheEntity theEntity = dao.get("theInteger", "128").orElseThrow();
+            Assertions.assertThrowsExactly(NoSuchElementException.class, () ->{
+                dao.get("theInteger", "1").orElseThrow();
+            });
+
+            List<TheEntity> listEntity = dao.getAll();
+
+        }
+
+        // Retrieve ..
+        {
+            Optional<TheEntity> theEntity = dao.get("theInteger", "128");
         }
 
         // Fake delete ..
@@ -105,6 +136,8 @@ public class TestDAO {
         {
             TheEntity theEntity = dao.get(1).orElseThrow();
             dao.delete(theEntity);
+            dao.delete(2);
+            dao.delete(2);
         }
 
         //retrieve ..
@@ -114,7 +147,8 @@ public class TestDAO {
             //Assertions.assertTrue(dao.get(0).isEmpty(), "DAO 1 was not null");
             Optional<TheEntity> theEntity2 = dao.get(10);
             Assertions.assertTrue(theEntity2.isEmpty(), "DAO 10 was not null");
-            TheEntity theEntity = dao.get(1).orElseThrow();
+            Optional<TheEntity> theEntity = dao.get(1);
+            Assertions.assertTrue(theEntity2.isEmpty(), "DAO 1 was not null");
             log.debug("To db: {}", ToStringBuilder.reflectionToString(theEntity, ToStringStyle.MULTI_LINE_STYLE));
         }
 
