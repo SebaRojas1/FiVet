@@ -12,10 +12,44 @@ message Persona {
   string rut = 1;
   string nombre = 2;
   string email = 3;
+  string direccion = 4;
+}
+
+message Control {
+  string fecha = 1;
+  float temperatura = 2;
+  float peso = 3;
+  float altura = 4;
+  string diagnostico = 5;
+  string nomVeterinario = 6;
+  string siguienteFecha = 7;
+}
+
+message NumeroFicha {
+  int64 numeroFicha = 1;
+}
+
+message Ficha {
+  int64 numeroFicha = 1;
+  string nombrePaciente = 2;
+  string especie = 3;
+  string fechaNacimiento = 4;
+  string raza = 5;
+  string sexo = 6;
+  string color = 7;
+  string tipo = 8;
+}
+
+message Q {
+  string query = 1;
 }
 
 service FivetService {
   rpc autenticar(Credencial) returns (Persona) {}
 
-  //rpc registrarControl(control, numeroFicha) returns (Ficha) {}
+  //rpc registrarControl(Control, NumeroFicha) returns (Ficha) {}
+
+  rpc obtenerFicha(NumeroFicha) returns (Ficha) {}
+
+  //rpc buscarFicha(Q) returns (Ficha[] / List<Ficha>) {}
 }

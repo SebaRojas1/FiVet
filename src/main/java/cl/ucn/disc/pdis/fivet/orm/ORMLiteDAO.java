@@ -22,26 +22,33 @@ package cl.ucn.disc.pdis.fivet.orm;
 import com.google.common.collect.Lists;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
+import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import com.j256.ormlite.support.ConnectionSource;
+import com.j256.ormlite.table.TableUtils;
 import lombok.NonNull;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
 import java.sql.SQLException;
-import java.sql.SQLNonTransientException;
 import java.time.ZonedDateTime;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
+/**
+ *
+ *
+ * @author Sebastian Rojas
+ * @param <T> the base entity
+ */
 @Slf4j
-public final class ORMLiteDAO <T extends Entity> implements DAO<T> {
+public final class ORMLiteDAO <T extends BaseEntity> implements DAO<T> {
 
     /**
      * The real DAO (connection to ORMLite DAO)
      */
     private final Dao<T, Integer> dao;
 
+    private static ConnectionSource cs;
     /**
      * The constructor of ORMLiteDAO
      * @param cs the connection to the database
@@ -50,6 +57,17 @@ public final class ORMLiteDAO <T extends Entity> implements DAO<T> {
     @SneakyThrows(SQLException.class)
     public ORMLiteDAO(@NonNull final ConnectionSource cs,@NonNull final Class<T> clazz) {
         this.dao = DaoManager.createDao(cs,clazz);
+    }
+
+    /**
+     * The builder of the connection source
+     * @param s to use
+     * @return
+     */
+    @SneakyThrows
+    public static ConnectionSource buildConnectionSource(String s) {
+        cs = new JdbcConnectionSource(s);
+        return cs;
     }
 
     /**
@@ -154,6 +172,16 @@ public final class ORMLiteDAO <T extends Entity> implements DAO<T> {
         if (this.dao.update(t.get()) != 1) {
             throw new SQLException("Rows updated != 1");
         }
+    }
+
+    /**
+     * Drop and create a new table
+     */
+    @Override
+    @SneakyThrows
+    public void dropAndCreateTable() {
+        TableUtils.dropTable(cs, dao.getDataClass(), true);
+        TableUtils.createTable(cs, dao.getDataClass());
     }
 
 }

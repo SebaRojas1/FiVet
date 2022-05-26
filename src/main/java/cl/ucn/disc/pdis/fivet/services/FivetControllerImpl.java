@@ -24,8 +24,10 @@ import cl.ucn.disc.pdis.fivet.orm.DAO;
 import cl.ucn.disc.pdis.fivet.orm.ORMLiteDAO;
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import com.j256.ormlite.support.ConnectionSource;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.crypto.bcrypt.BCrypt;
+import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.sql.SQLException;
 import java.util.Optional;
@@ -43,11 +45,29 @@ public final class FivetControllerImpl implements FivetController {
      */
     private DAO<Persona> daoPersona;
 
-    public FivetControllerImpl(String dbUrl) throws SQLException {
+    /**
+     * The Hasher.
+     */
+    private final static PasswordEncoder PASSWORD_ENCODER = new Argon2PasswordEncoder();
+
+    public FivetControllerImpl(String dbUrl, boolean b) throws SQLException {
 
         ConnectionSource cs = new JdbcConnectionSource(dbUrl);
         this.daoPersona = new ORMLiteDAO<>(cs, Persona.class);
 
+    }
+
+    /**
+     * Check if the Email or Rut exists in the system
+     *
+     * @param login rut or email
+     * @return a persona
+     */
+    @Override
+    public Optional<Persona> retrieveLogin(String login) {
+
+        //TODO hacer el retrieve login y que se utilice dentro del autenticar
+        return Optional.empty();
     }
 
     /**
@@ -62,29 +82,44 @@ public final class FivetControllerImpl implements FivetController {
 
         Optional<Persona> persona = this.daoPersona.get("rut", login);
 
+        // Verify if the rut is in the database
         if (persona.isEmpty()) {
             persona = this.daoPersona.get("email", login);
         }
+
+        // Verify if the Email is in the database
         if (persona.isEmpty()) {
             return Optional.empty();
         }
 
-        if (BCrypt.checkpw(password, persona.get().getPassword())) {
+        // Check the password to verify that is the correct password
+        if (PASSWORD_ENCODER.matches(password, persona.get().getPassword())) {
             return persona;
         }
+        // Wrong password, return an empty
         return Optional.empty();
     }
 
     /**
-     * Add a Persona in to the backend
-     *
+     * Save a persona into the backend
      * @param persona  to add
      * @param password to hash
      */
     @Override
-    public void add(Persona persona, String password) {
-        persona.setPassword(BCrypt.hashpw(password,
-                BCrypt.gensalt(12)));
+    public void add(@NonNull Persona persona, @NonNull String password) {
+        // Hash password
+        persona.setPassword(PASSWORD_ENCODER.encode(password));
+        // Save the persona
         this.daoPersona.save(persona);
+    }
+
+    /**
+     * Delete a persona by id
+     *
+     * @param idPersona the id
+     */
+    @Override
+    public void delete(Integer idPersona) {
+        //TODO hacer el delete en la implementacion
     }
 }

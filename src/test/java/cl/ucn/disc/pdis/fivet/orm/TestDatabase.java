@@ -29,13 +29,15 @@ import com.j256.ormlite.table.TableUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.sql.SQLException;
 
 /**
  * Testing class for ORMLite and database
  *
- * @author Sebastiàn Rojas
+ * @author Sebastian Rojas
  */
 @Slf4j
 public class TestDatabase {
@@ -48,6 +50,9 @@ public class TestDatabase {
         // Registering the ZonedDateTimeType
         DataPersisterManager.registerDataPersisters(ZonedDateTimeType.INSTANCE);
 
+        // The password encoder
+        PasswordEncoder passwordEncoder = new Argon2PasswordEncoder();
+
         // Connection source: autoclose with the try/catch
         try(ConnectionSource connectionSource = new JdbcConnectionSource(databaseUrl)) {
 
@@ -58,8 +63,13 @@ public class TestDatabase {
             Dao<Persona, Integer> daoPersona = DaoManager.createDao(connectionSource, Persona.class);
 
             // New Persona
-            Persona persona = new Persona("Sebastian", "micasa", 111111, 2222222,
-                    "seba@gmail.com", "20.218.430-8", "hola123");
+            Persona persona = Persona.builder()
+                    .nombre("Sebastian Rojas")
+                    .rut("202184308")
+                    .email("seba@gmail.com")
+                    .direccion("micasa123")
+                    .password(passwordEncoder.encode("seba123"))
+                    .build();
 
             // Insert Persona into the database
             int tuples = daoPersona.create(persona);

@@ -33,7 +33,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.sql.SQLException;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -42,7 +41,7 @@ import java.util.Optional;
 /**
  * Testing the DAO
  *
- * @author Sebastián Rojas
+ * @author Sebastian Rojas
  */
 @Slf4j
 public class TestDAO {
@@ -165,7 +164,7 @@ public class TestDAO {
     @NoArgsConstructor
     @AllArgsConstructor
     @DatabaseTable(tableName = "the_entity")
-    private static class TheEntity extends Entity {
+    private static class TheEntity extends BaseEntity {
 
         /**
          * The Name

@@ -19,7 +19,7 @@
 
 package cl.ucn.disc.pdis.fivet.model;
 
-import cl.ucn.disc.pdis.fivet.orm.Entity;
+import cl.ucn.disc.pdis.fivet.orm.BaseEntity;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 import lombok.AllArgsConstructor;
@@ -30,13 +30,13 @@ import lombok.NoArgsConstructor;
 /**
  * The model of the Foto object
  *
- * @author Sebastiàn Rojas
+ * @author Sebastian Rojas
  */
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @DatabaseTable(tableName = "foto")
-public final class Foto extends Entity {
+public final class Foto extends BaseEntity {
 
     /**
      * The Url of the image

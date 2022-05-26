@@ -22,7 +22,13 @@ package cl.ucn.disc.pdis.fivet.orm;
 import java.util.List;
 import java.util.Optional;
 
-public interface DAO <T extends Entity> {
+/**
+ *
+ *
+ * @author Sebastian Rojas
+ * @param <T> the base entity
+ */
+public interface DAO <T extends BaseEntity> {
 
     /**
      * Get optional, T
@@ -63,4 +69,8 @@ public interface DAO <T extends Entity> {
      */
     void delete(Integer id);
 
+    /**
+     * Drop and create a new table
+     */
+    void dropAndCreateTable();
 }

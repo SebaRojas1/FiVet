@@ -19,7 +19,7 @@
 
 package cl.ucn.disc.pdis.fivet.model;
 
-import cl.ucn.disc.pdis.fivet.orm.Entity;
+import cl.ucn.disc.pdis.fivet.orm.BaseEntity;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 import lombok.AllArgsConstructor;
@@ -32,13 +32,13 @@ import java.time.ZonedDateTime;
 /**
  * The model of the examen object
  *
- * @author Sebastiàn Rojas
+ * @author Sebastian Rojas
  */
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @DatabaseTable(tableName = "examen")
-public class Examen extends Entity {
+public class Examen extends BaseEntity {
 
     /**
      * The nombre of the examen

@@ -19,26 +19,28 @@
 
 package cl.ucn.disc.pdis.fivet.model;
 
-import cl.ucn.disc.pdis.fivet.orm.Entity;
+import cl.ucn.disc.pdis.fivet.orm.BaseEntity;
 import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.ZonedDateTime;
+import java.time.LocalDate;
+import java.util.Collection;
 
 /**
  * The model of the FichaMedica object
  *
- * @author Sebastiàn Rojas
+ * @author Sebastian Rojas
  */
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@DatabaseTable(tableName = "ficha_medica")
-public final class FichaMedica extends Entity {
+@DatabaseTable
+public final class FichaMedica extends BaseEntity {
 
     /**
      * The number of the record card
@@ -66,7 +68,7 @@ public final class FichaMedica extends Entity {
      */
     @Getter
     @DatabaseField(canBeNull = false)
-    private ZonedDateTime fechaNacimiento;
+    private LocalDate fechaNacimiento;
 
     /**
      * The raza of the patient
@@ -80,7 +82,7 @@ public final class FichaMedica extends Entity {
      */
     @Getter
     @DatabaseField(canBeNull = false)
-    private Character sexo;
+    private Sexo sexo;
 
     /**
      * The color of the patient
@@ -96,4 +98,32 @@ public final class FichaMedica extends Entity {
     @DatabaseField(canBeNull = false)
     private String tipo;
 
+    /**
+     * The duenio
+     */
+    @Getter
+    @DatabaseField(foreign = true, foreignAutoRefresh = true, columnName = "persona_id")
+    private Persona duenio;
+
+    /**
+     * The controles
+     */
+    @Getter
+    @ForeignCollectionField(eager = true, orderColumnName = "fecha")
+    private Collection<Control> controles;
+
+    /**
+     * Append a control
+     */
+    public void add(Control control) {
+        this.controles.add(control);
+    }
+
+    /**
+     * The sexo
+     */
+    public enum Sexo {
+        MACHO,
+        HEMBRA
+    }
 }

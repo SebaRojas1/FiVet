@@ -34,8 +34,8 @@ import java.time.ZonedDateTime;
  */
 @NoArgsConstructor
 @AllArgsConstructor
-@DatabaseTable(tableName = "entity")
-public abstract class Entity {
+@DatabaseTable
+public abstract class BaseEntity {
 
     /**
      * The id of the entity

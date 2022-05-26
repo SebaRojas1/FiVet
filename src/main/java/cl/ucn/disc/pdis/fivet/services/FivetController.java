@@ -29,7 +29,14 @@ import java.util.Optional;
 public interface FivetController {
 
     /**
-     *
+     * Check if the Email or Rut exists in the system
+     * @param login rut or email
+     * @return a persona
+     */
+    Optional<Persona> retrieveLogin(String login);
+
+    /**
+     * Authentication of a person in the system
      * @param login The login account
      * @param password The password of the user
      * @return a persona
@@ -37,11 +44,17 @@ public interface FivetController {
     Optional<Persona> autenticar(String login, String password);
 
     /**
-     * add a Persona in to the backend
+     * add a Persona in the system
      * @param persona to add
      * @param password to hash
      */
     void add(Persona persona, String password);
 
-    // Ficha
+    /**
+     * Delete a persona by id
+     * @param idPersona the id
+     */
+    void delete(Integer idPersona);
+
+    //TODO Metodo Ficha
 }

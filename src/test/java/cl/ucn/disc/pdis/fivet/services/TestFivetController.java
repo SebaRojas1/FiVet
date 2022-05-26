@@ -22,18 +22,18 @@ package cl.ucn.disc.pdis.fivet.services;
 import cl.ucn.disc.pdis.fivet.orm.DAO;
 import cl.ucn.disc.pdis.fivet.orm.ORMLiteDAO;
 import cl.ucn.disc.pdis.fivet.orm.ZonedDateTimeType;
-import cl.ucn.disc.pdis.fivet.services.FivetControllerImpl;
 import com.j256.ormlite.field.DataPersisterManager;
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
-import com.mysql.cj.log.Log;
 import lombok.Cleanup;
 import lombok.SneakyThrows;
 import cl.ucn.disc.pdis.fivet.model.Persona;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 /**
  * Testing the Fivet Controller
@@ -54,6 +54,9 @@ public class TestFivetController {
 
         log.debug("Registering the ZonedDateTimeType ..");
         DataPersisterManager.registerDataPersisters(ZonedDateTimeType.INSTANCE);
+
+        // The password encoder
+        PasswordEncoder passwordEncoder = new Argon2PasswordEncoder();
 
         // The driver connection
         String databaseUrl = "jdbc:h2:mem:fivet";
@@ -79,9 +82,9 @@ public class TestFivetController {
         DAO<Persona> dao = new ORMLiteDAO<>(cs, Persona.class);
 
         // Instanciating the controller
-        FivetController controller = new FivetControllerImpl(databaseUrl);
+        FivetController controller = new FivetControllerImpl(databaseUrl, true);
 
-        // testing add method
+        // Testing add method
         log.debug("Creating the persona");
         {
             Persona persona = Persona.builder()
@@ -89,18 +92,22 @@ public class TestFivetController {
                     .rut("123456766")
                     .email("hola12@gmail.com")
                     .direccion("si 1234")
-                    .telefonoFijo(12345678)
-                    .telefonoMovil(87654321)
-                    .password("123")
+                    .password(passwordEncoder.encode("seba123"))
                     .build();
+
+            // Adding the person with the password hashed
             controller.add(persona, persona.getPassword());
         }
 
         // Testing autenticar method
         {
+            // Normal login with the rut
             controller.autenticar("123456766", "123");
+            // Normal login with the email
             controller.autenticar("hola12@gmail.com", "123");
+            // Login with a invalid password
             controller.autenticar("hola12@gmail.com", "12344");
+            // Login with a invalid rut or email
             controller.autenticar("hola", "123");
         }
 

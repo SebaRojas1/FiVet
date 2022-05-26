@@ -21,34 +21,103 @@ package cl.ucn.disc.pdis.fivet;
 
 import cl.ucn.disc.pdis.fivet.grpc.Credencial;
 import cl.ucn.disc.pdis.fivet.grpc.FivetServiceGrpc;
-import cl.ucn.disc.pdis.fivet.model.Persona;
+import cl.ucn.disc.pdis.fivet.orm.LocalDateType;
+import cl.ucn.disc.pdis.fivet.orm.ZonedDateTimeType;
+import cl.ucn.disc.pdis.fivet.services.FivetController;
+import cl.ucn.disc.pdis.fivet.services.FivetControllerImpl;
+import com.j256.ormlite.field.DataPersisterManager;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
 import io.grpc.stub.StreamObserver;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
+import java.sql.SQLException;
+import java.util.Optional;
 
+/**
+ * The server of Fivet
+ */
+@Slf4j
 public class FivetServer {
 
+    /**
+     * The Main
+     * @param args to use
+     */
     @SneakyThrows({InterruptedException.class, IOException.class})
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SQLException {
 
-        Server server = ServerBuilder.forPort(5000)
-                .addService(new FivetServiceImpl())
+        // Registering the LocalDateType
+        DataPersisterManager.registerDataPersisters(LocalDateType.INSTANCE);
+
+        // Registering the ZonedDateTimeType
+        DataPersisterManager.registerDataPersisters(ZonedDateTimeType.INSTANCE);
+
+        log.debug("Building the FivetServiceImpl ...");
+        FivetServiceImpl fivetService = new FivetServiceImpl("jdbc:h2:mem:fivet");
+
+        log.debug("Building and Starting the server ..");
+
+        // Build and start the server
+        Server server = ServerBuilder.forPort(8080)
+                .addService(fivetService)
                 .build()
                 .start();
 
+        // Awaits
         server.awaitTermination();
+
+        log.debug("Done.");
 
     }
 
-
+    @Slf4j
     private static class FivetServiceImpl extends FivetServiceGrpc.FivetServiceImplBase {
 
-        /*public void autenticar(Credencial c, StreamObserver<Persona> sop){
-            super.autenticar(c,sop);
-        }*/
+        /**
+         * The controller.
+         */
+        private final FivetController fivetController;
+
+        /**
+         *
+         * @param databaseUrl to use.
+         * @throws SQLException
+         */
+        public FivetServiceImpl(String databaseUrl) throws SQLException {
+            this.fivetController = new FivetControllerImpl(databaseUrl, true);
+        }
+
+        public void autenticar(Credencial request, StreamObserver<cl.ucn.disc.pdis.fivet.grpc.Persona>
+                responseObserver) {
+            // Retrieve from Controller
+            Optional<cl.ucn.disc.pdis.fivet.model.Persona> persona = this.fivetController
+                    .retrieveLogin(request
+                    .getLogin());
+            if (persona.isPresent()) {
+                // Return the observer
+                responseObserver.onNext(cl.ucn.disc.pdis.fivet.grpc.Persona.newBuilder()
+                        .setRut(persona.get().getRut())
+                        .setNombre(persona.get().getNombre())
+                        .setEmail(persona.get().getEmail())
+                        .setDireccion(persona.get().getDireccion())
+                        .build());
+                responseObserver.onCompleted();
+            }
+            else {
+                responseObserver.onNext(cl.ucn.disc.pdis.fivet.grpc.Persona.newBuilder()
+                        .setRut("202184308")
+                        .setNombre("Sebastian Rojas")
+                        .setEmail("seba@gmail.com")
+                        .setDireccion("micasa #3332")
+                        .build());
+                responseObserver.onCompleted();
+            }
+        }
+
+
 
     }
 

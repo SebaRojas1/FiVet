@@ -17,56 +17,51 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package cl.ucn.disc.pdis.fivet.model;
+package cl.ucn.disc.pdis.fivet;
 
-import cl.ucn.disc.pdis.fivet.orm.BaseEntity;
-import com.j256.ormlite.field.DatabaseField;
-import com.j256.ormlite.table.DatabaseTable;
-import lombok.*;
+import cl.ucn.disc.pdis.fivet.grpc.Credencial;
+import cl.ucn.disc.pdis.fivet.grpc.FivetServiceGrpc;
+import cl.ucn.disc.pdis.fivet.grpc.Persona;
+import io.grpc.ManagedChannel;
+import io.grpc.ManagedChannelBuilder;
+import io.grpc.StatusRuntimeException;
+import lombok.extern.slf4j.Slf4j;
 
 /**
- * The model of the persona object
+ * The client of fivet
  *
  * @author Sebastian Rojas
  */
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
-@DatabaseTable
-public final class Persona extends BaseEntity {
+@Slf4j
+public class FivetClient {
 
-    /**
-     * The nombre of the person
-     */
-    @Getter
-    @DatabaseField(canBeNull = false)
-    private String nombre;
+    public static void main(String[] args) {
 
-    /**
-     * The direccion of the person
-     */
-    @Getter
-    private String direccion;
+        log.debug("Starting the client ...");
 
-    /**
-     * The email of the person
-     */
-    @Getter
-    @DatabaseField(canBeNull = false, unique = true)
-    private String email;
+        // The channel
+        ManagedChannel channel = ManagedChannelBuilder
+                .forAddress("127.0.0.1", 8080)
+                .usePlaintext()
+                .build();
 
-    /**
-     * The rut of the person
-     */
-    @Getter
-    @DatabaseField(canBeNull = false, unique = true)
-    private String rut;
+        // The stub
+        FivetServiceGrpc.FivetServiceBlockingStub stub = FivetServiceGrpc.newBlockingStub(channel);
 
-    /**
-     * The password of the persona
-     */
-    @Getter
-    @Setter
-    @DatabaseField(canBeNull = false)
-    private String password;
+        try{
+            Persona persona = stub.autenticar(Credencial.newBuilder()
+                    .setLogin("seba@gmail.com")
+                    .setPassword("seba123")
+                    .build());
+
+            log.debug("Persona: {}", persona);
+        }
+        catch (StatusRuntimeException e) {
+            log.warn("RPC Failed: {}", e.getStatus());
+        }
+
+        log.debug("Done.");
+
+    }
+
 }

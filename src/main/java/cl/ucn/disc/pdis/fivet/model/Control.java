@@ -19,7 +19,7 @@
 
 package cl.ucn.disc.pdis.fivet.model;
 
-import cl.ucn.disc.pdis.fivet.orm.Entity;
+import cl.ucn.disc.pdis.fivet.orm.BaseEntity;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 import lombok.AllArgsConstructor;
@@ -33,13 +33,13 @@ import java.time.ZonedDateTime;
 /**
  * The model of the control object created for the patients
  *
- * @author Sebastiàn Rojas
+ * @author Sebastian Rojas
  */
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@DatabaseTable(tableName = "control")
-public class Control extends Entity {
+@DatabaseTable
+public class Control extends BaseEntity {
 
     /**
      * The fecha of the control carried out
@@ -53,21 +53,21 @@ public class Control extends Entity {
      */
     @Getter
     @DatabaseField(canBeNull = false)
-    private Float temperatura;
+    private Double temperatura;
 
     /**
      * The peso of the patient in the control
      */
     @Getter
     @DatabaseField(canBeNull = false)
-    private Float peso;
+    private Double peso;
 
     /**
      * The altura of the patient in the control
      */
     @Getter
     @DatabaseField(canBeNull = false)
-    private Float altura;
+    private Double altura;
 
     /**
      * The patient's diagnostico
@@ -77,17 +77,17 @@ public class Control extends Entity {
     private String diagnostico;
 
     /**
-     * The vet's name
+     * The veterinario
      */
     @Getter
-    @DatabaseField(canBeNull = false)
-    private String nomVeterinario;
+    @DatabaseField(foreign = true, foreignAutoRefresh = true, columnName = "veterinario_id", canBeNull = false)
+    private Persona veterinario;
 
     /**
-     * The date of the next control
+     * The ficha medica
      */
     @Getter
-    @DatabaseField(canBeNull = false)
-    private ZonedDateTime siguienteFecha;
+    @DatabaseField(foreign = true, foreignAutoRefresh = true, columnName = "fichamedica_id")
+    private FichaMedica fichaMedica;
 
 }
