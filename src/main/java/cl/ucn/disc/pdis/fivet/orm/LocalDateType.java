@@ -50,7 +50,7 @@ public final class LocalDateType extends BaseDataType {
     /**
      * The Size of the String: 2022-04-08T18:10:56.1160769-04:00[America/santiago]
      */
-    private static final int DEFAULT_WIDTH = 100;
+    private static final int DEFAULT_WIDTH = 10;
 
     /**
      * The private constructor

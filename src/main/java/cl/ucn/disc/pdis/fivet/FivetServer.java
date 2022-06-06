@@ -19,8 +19,7 @@
 
 package cl.ucn.disc.pdis.fivet;
 
-import cl.ucn.disc.pdis.fivet.grpc.Credencial;
-import cl.ucn.disc.pdis.fivet.grpc.FivetServiceGrpc;
+import cl.ucn.disc.pdis.fivet.grpc.*;
 import cl.ucn.disc.pdis.fivet.orm.LocalDateType;
 import cl.ucn.disc.pdis.fivet.orm.ZonedDateTimeType;
 import cl.ucn.disc.pdis.fivet.services.FivetController;
@@ -90,31 +89,50 @@ public class FivetServer {
             this.fivetController = new FivetControllerImpl(databaseUrl, true);
         }
 
-        public void autenticar(Credencial request, StreamObserver<cl.ucn.disc.pdis.fivet.grpc.Persona>
-                responseObserver) {
+        public void autenticate(AutenticateReq request, StreamObserver<PersonaReply> responseObserver) {
             // Retrieve from Controller
             Optional<cl.ucn.disc.pdis.fivet.model.Persona> persona = this.fivetController
                     .retrieveLogin(request
                     .getLogin());
             if (persona.isPresent()) {
                 // Return the observer
-                responseObserver.onNext(cl.ucn.disc.pdis.fivet.grpc.Persona.newBuilder()
-                        .setRut(persona.get().getRut())
-                        .setNombre(persona.get().getNombre())
-                        .setEmail(persona.get().getEmail())
-                        .setDireccion(persona.get().getDireccion())
+                responseObserver.onNext(cl.ucn.disc.pdis.fivet.grpc.PersonaReply.newBuilder()
+                        .setPersona(PersonaEntity.newBuilder()
+                                .setNombre("Sebastian")
+                                .setRut("202184308")
+                                .setEmail("seba@gmail.com")
+                                .setDireccion("micasa #3332")
+                                .build())
                         .build());
                 responseObserver.onCompleted();
             }
             else {
-                responseObserver.onNext(cl.ucn.disc.pdis.fivet.grpc.Persona.newBuilder()
-                        .setRut("202184308")
-                        .setNombre("Sebastian Rojas")
-                        .setEmail("seba@gmail.com")
-                        .setDireccion("micasa #3332")
+                responseObserver.onNext(cl.ucn.disc.pdis.fivet.grpc.PersonaReply.newBuilder()
+                        .setPersona(PersonaEntity.newBuilder()
+                                .setNombre("Sebastian")
+                                .setRut("202184308")
+                                .setEmail("seba@gmail.com")
+                                .setDireccion("micasa #3332")
+                                .build())
                         .build());
                 responseObserver.onCompleted();
             }
+        }
+
+        public void addControl(AddControlReq request) {
+
+        }
+
+        public void retrieveFichaMedica(RetrieveFichaMedicaReq request) {
+
+        }
+
+        public void searchFichaMedica(SearchFichaMedicaReq request) {
+
+        }
+
+        public void addFichaMedica(AddFichaMedicaReq request) {
+
         }
 
 

@@ -3,53 +3,80 @@ syntax = "proto3";
 option java_multiple_files = true;
 option java_package = "cl.ucn.disc.pdis.fivet.grpc";
 
-message Credencial {
-  string login = 1;
-  string password = 2;
-}
-
-message Persona {
+message PersonaEntity {
   string rut = 1;
   string nombre = 2;
   string email = 3;
   string direccion = 4;
 }
+message FichaMedicaEntity {
+  int32 numeroFicha = 1;
+  string nombrePaciente = 2;
+  string especie = 3;
+  string fechaNacimiento = 4;
+  string raza = 5;
+  SexoEntity sexo = 6;
+  string color = 7;
+  string tipo = 8;
+  PersonaEntity duenio = 9;
+  repeated ControlEntity controles = 10;
+}
 
-message Control {
+message ControlEntity {
   string fecha = 1;
   float temperatura = 2;
   float peso = 3;
   float altura = 4;
   string diagnostico = 5;
-  string nomVeterinario = 6;
-  string siguienteFecha = 7;
+  PersonaEntity veterinario = 6;
 }
 
-message NumeroFicha {
-  int64 numeroFicha = 1;
+enum SexoEntity {
+  UNDEFINED = 0;
+  MACHO = 1;
+  HEMBRA = 2;
 }
 
-message Ficha {
-  int64 numeroFicha = 1;
-  string nombrePaciente = 2;
-  string especie = 3;
-  string fechaNacimiento = 4;
-  string raza = 5;
-  string sexo = 6;
-  string color = 7;
-  string tipo = 8;
+message AutenticateReq {
+  string login = 1;
+  string password = 2;
 }
 
-message Q {
+message AddControlReq {
+  ControlEntity control = 1;
+}
+
+message RetrieveFichaMedicaReq {
+  int32 numeroFicha = 1;
+}
+
+message SearchFichaMedicaReq {
   string query = 1;
 }
 
+message AddFichaMedicaReq {
+  FichaMedicaEntity fichaMedica = 1;
+}
+
+message PersonaReply {
+  PersonaEntity persona = 1;
+}
+
+message FichaMedicaReply {
+  FichaMedicaEntity fichaMedica = 1;
+}
+
+
+
 service FivetService {
-  rpc autenticar(Credencial) returns (Persona) {}
 
-  //rpc registrarControl(Control, NumeroFicha) returns (Ficha) {}
+  rpc autenticate(AutenticateReq) returns (PersonaReply) {}
 
-  rpc obtenerFicha(NumeroFicha) returns (Ficha) {}
+  rpc addControl(AddControlReq) returns (FichaMedicaReply) {}
 
-  //rpc buscarFicha(Q) returns (Ficha[] / List<Ficha>) {}
+  rpc retrieveFichaMedica(RetrieveFichaMedicaReq) returns (FichaMedicaReply) {}
+
+  rpc searchFichaMedica(SearchFichaMedicaReq) returns (FichaMedicaReply) {}
+
+  rpc addFichaMedica(AddFichaMedicaReq) returns (FichaMedicaReply) {}
 }
