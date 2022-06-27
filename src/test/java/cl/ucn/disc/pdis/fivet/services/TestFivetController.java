@@ -96,7 +96,7 @@ public class TestFivetController {
                     .build();
 
             // Adding the person with the password hashed
-            controller.add(persona, persona.getPassword());
+            controller.addPersona(persona, persona.getPassword());
         }
 
         // Testing autenticar method

@@ -19,8 +19,11 @@
 
 package cl.ucn.disc.pdis.fivet.services;
 
+import cl.ucn.disc.pdis.fivet.model.Control;
+import cl.ucn.disc.pdis.fivet.model.FichaMedica;
 import cl.ucn.disc.pdis.fivet.model.Persona;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -48,13 +51,37 @@ public interface FivetController {
      * @param persona to add
      * @param password to hash
      */
-    void add(Persona persona, String password);
+    void addPersona(Persona persona, String password);
+
+    /**
+     * add a Control in a FichaMedica
+     * @param control to add
+     */
+    void addControl(Control control);
+
+    /**
+     * add a FichaMedica in the system
+     * @param fichaMedica to add
+     */
+    void addFichaMedica(FichaMedica fichaMedica);
+
+    /**
+     * get a FichaMedica by the numeroFicha
+     * @param numeroFicha to use
+     */
+    Optional<FichaMedica> getFichaMedica(Integer numeroFicha);
+
+    /**
+     * search 0 or more FichaMedica and return a List of FichaMedica
+     * @param q to use
+     */
+    List<FichaMedica> searchFichaMedica(String q);
 
     /**
      * Delete a persona by id
      * @param idPersona the id
      */
-    void delete(Integer idPersona);
+    void deletePersona(Integer idPersona);
 
     //TODO Metodo Ficha
 }

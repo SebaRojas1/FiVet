@@ -17,7 +17,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package cl.ucn.disc.pdis.fivet;
+/*package cl.ucn.disc.pdis.fivet;
 
 import cl.ucn.disc.pdis.fivet.grpc.AutenticateReq;
 import cl.ucn.disc.pdis.fivet.grpc.FivetServiceGrpc;
@@ -25,13 +25,13 @@ import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.StatusRuntimeException;
 import lombok.extern.slf4j.Slf4j;
-
+*/
 /**
  * The client of fivet
  *
  * @author Sebastian Rojas
  */
-@Slf4j
+/*@Slf4j
 public class FivetClient {
 
     public static void main(String[] args) {
@@ -63,4 +63,4 @@ public class FivetClient {
 
     }
 
-}
+}*/

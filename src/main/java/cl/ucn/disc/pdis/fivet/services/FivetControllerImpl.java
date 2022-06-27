@@ -19,6 +19,8 @@
 
 package cl.ucn.disc.pdis.fivet.services;
 
+import cl.ucn.disc.pdis.fivet.model.Control;
+import cl.ucn.disc.pdis.fivet.model.FichaMedica;
 import cl.ucn.disc.pdis.fivet.model.Persona;
 import cl.ucn.disc.pdis.fivet.orm.DAO;
 import cl.ucn.disc.pdis.fivet.orm.ORMLiteDAO;
@@ -29,7 +31,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import javax.swing.text.html.Option;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -41,9 +45,10 @@ import java.util.Optional;
 public final class FivetControllerImpl implements FivetController {
 
     /**
-     * The dao of persona objects
+     * The dao of the entitys
      */
     private DAO<Persona> daoPersona;
+    private DAO<FichaMedica> daoFichaMedica;
 
     /**
      * The Hasher.
@@ -54,6 +59,7 @@ public final class FivetControllerImpl implements FivetController {
 
         ConnectionSource cs = new JdbcConnectionSource(dbUrl);
         this.daoPersona = new ORMLiteDAO<>(cs, Persona.class);
+        this.daoFichaMedica = new ORMLiteDAO<>(cs, FichaMedica.class);
 
     }
 
@@ -106,11 +112,53 @@ public final class FivetControllerImpl implements FivetController {
      * @param password to hash
      */
     @Override
-    public void add(@NonNull Persona persona, @NonNull String password) {
+    public void addPersona(@NonNull Persona persona, @NonNull String password) {
         // Hash password
         persona.setPassword(PASSWORD_ENCODER.encode(password));
         // Save the persona
         this.daoPersona.save(persona);
+    }
+
+    /**
+     * add a Control in a FichaMedica
+     *
+     * @param control to add
+     */
+    @Override
+    public void addControl(Control control) {
+        Optional<FichaMedica> fichaMedica = this.daoFichaMedica.get(control.getFichaMedica().getNumeroFicha());
+        fichaMedica.get().getControles().add(control);
+    }
+
+    /**
+     * add a FichaMedica in the system
+     *
+     * @param fichaMedica to add
+     */
+    @Override
+    public void addFichaMedica(FichaMedica fichaMedica) {
+        this.daoFichaMedica.save(fichaMedica);
+    }
+
+    /**
+     * get a FichaMedica by the numeroFicha
+     *
+     * @param numeroFicha to use
+     */
+    @Override
+    public Optional<FichaMedica> getFichaMedica(Integer numeroFicha) {
+        Optional<FichaMedica> fichaMedica = this.daoFichaMedica.get(numeroFicha);
+        return fichaMedica;
+    }
+
+    /**
+     * search 0 or more FichaMedica and return a List of FichaMedica
+     *
+     * @param q to use
+     */
+    @Override
+    public List<FichaMedica> searchFichaMedica(String q) {
+        return null;
     }
 
     /**
@@ -119,7 +167,7 @@ public final class FivetControllerImpl implements FivetController {
      * @param idPersona the id
      */
     @Override
-    public void delete(Integer idPersona) {
+    public void deletePersona(Integer idPersona) {
         //TODO hacer el delete en la implementacion
     }
 }

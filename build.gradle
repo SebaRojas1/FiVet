@@ -70,6 +70,10 @@ dependencies {
     implementation 'org.springframework.security:spring-security-crypto:5.6.3'
     runtimeOnly 'org.bouncycastle:bcprov-jdk15on:1.70'
     runtimeOnly 'org.springframework:spring-jcl:5.3.19'
+
+    // https://mvnrepository.com/artifact/org.apache.commons/commons-lang3
+    implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.12.0'
+
 }
 
 protobuf {

@@ -29,6 +29,7 @@ message ControlEntity {
   float altura = 4;
   string diagnostico = 5;
   PersonaEntity veterinario = 6;
+  FichaMedicaEntity fichaMedica = 7;
 }
 
 enum SexoEntity {
