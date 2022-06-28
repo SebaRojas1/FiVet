@@ -19,15 +19,16 @@
 
 package cl.ucn.disc.pdis.fivet.services;
 
-import cl.ucn.disc.pdis.fivet.grpc.AutenticateReq;
-import cl.ucn.disc.pdis.fivet.grpc.FivetServiceGrpc;
-import cl.ucn.disc.pdis.fivet.grpc.PersonaEntity;
-import cl.ucn.disc.pdis.fivet.grpc.PersonaReply;
+import cl.ucn.disc.pdis.fivet.grpc.*;
+import cl.ucn.disc.pdis.fivet.model.Control;
+import cl.ucn.disc.pdis.fivet.model.FichaMedica;
 import cl.ucn.disc.pdis.fivet.model.Persona;
 import io.grpc.stub.StreamObserver;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.math.NumberUtils;
 
 import java.sql.SQLException;
+import java.util.Collection;
 import java.util.Optional;
 
 @Slf4j
@@ -46,6 +47,11 @@ public class FivetServiceImpl extends FivetServiceGrpc.FivetServiceImplBase {
         this.fivetController = new FivetControllerImpl(databaseUrl, true);
     }
 
+    /**
+     * autenticate
+     * @param request to use, contains a login, password
+     * @param responseObserver to use
+     */
     public void autenticate(AutenticateReq request, StreamObserver<PersonaReply> responseObserver) {
         // Retrieve from Controller
         Optional<Persona> persona = this.fivetController
@@ -54,12 +60,7 @@ public class FivetServiceImpl extends FivetServiceGrpc.FivetServiceImplBase {
         if (persona.isPresent()) {
             // Return the observer
             responseObserver.onNext(PersonaReply.newBuilder()
-                    .setPersona(PersonaEntity.newBuilder()
-                            .setNombre(persona.get().getNombre())
-                            .setRut(persona.get().getRut())
-                            .setEmail(persona.get().getEmail())
-                            .setDireccion(persona.get().getDireccion())
-                            .build())
+                    .setPersona(ModelAdapter.build(persona.get()))
                     .build());
             responseObserver.onCompleted();
         } else {
@@ -76,63 +77,77 @@ public class FivetServiceImpl extends FivetServiceGrpc.FivetServiceImplBase {
         }
     }
 
-        /*public void addControl(AddControlReq request, StreamObserver<FichaMedicaReply> responseObserver) {
-            Optional<cl.ucn.disc.pdis.fivet.model.FichaMedica> fichaMedica = this.fivetController.getFichaMedica(request
-                    .getControl().getFichaMedica().getNumeroFicha());
-            if (fichaMedica.isPresent()) {
-                Control control = Control.builder()
-                        .altura(Double.valueOf(request.getControl().getAltura()))
-                        .diagnostico(request.getControl().getDiagnostico())
-                        .temperatura(Double.valueOf(request.getControl().getTemperatura()))
-                        .peso(Double.valueOf(request.getControl().getTemperatura()))
-                        .fecha(ZonedDateTime.parse(request.getControl().getFecha()))
-                        .fichaMedica(request.getControl().getFichaMedica().get)
-                        .controles
-                        .build();
-                this.fivetController.addControl();
-            }
-            else {
+    /**
+     * add a control
+     * @param request to use, contains a Control
+     * @param responseObserver to use
+     */
+    public void addControl(AddControlReq request, StreamObserver<FichaMedicaReply> responseObserver) {
+        Optional<FichaMedica> fichaMedica = this.fivetController.getFichaMedica(request
+                .getControl().getFichaMedica().getNumeroFicha());
+        if (fichaMedica.isPresent()) {
+            Control control = ModelAdapter.build(request.getControl());
+            this.fivetController.addControl(control);
+            responseObserver.onNext(FichaMedicaReply.newBuilder().setFichaMedica(ModelAdapter.build(fichaMedica.get()))
+                    .build());
+            responseObserver.onCompleted();
+        }
+        else {
+            //responseObserver.onError(buildException(Code.PERMISSION_DENIED, "Wrong control"));
+        }
+    }
 
-            }
-        }*/
-
-    /*public void retrieveFichaMedica(RetrieveFichaMedicaReq request,
+    /**
+     * retrieve a FichaMedica
+     * @param request to use, contains a NumeroFicha
+     * @param responseObserver to use
+     */
+    public void retrieveFichaMedica(RetrieveFichaMedicaReq request,
                                     StreamObserver<FichaMedicaReply> responseObserver) {
+        Optional<FichaMedica> fichaMedica = this.fivetController.getFichaMedica(request
+                .getNumeroFicha());
+        if (fichaMedica.isPresent()) {
+            responseObserver.onNext(FichaMedicaReply.newBuilder().setFichaMedica(ModelAdapter.build(fichaMedica.get()))
+                    .build());
+            responseObserver.onCompleted();
+        }
+        else {
+            //responseObserver.onError(buildException(Code.PERMISSION_DENIED, "Wrong number"));
+        }
+    }
 
-    }*/
+    /**
+     * Search a FichaMedica by a q
+     * @param request to use, contains a q
+     * @param responseObserver to use
+     */
+    public void searchFichaMedica(SearchFichaMedicaReq request, StreamObserver<FichaMedicaReply> responseObserver) {
 
-    /*public void searchFichaMedica(SearchFichaMedicaReq request, StreamObserver<FichaMedicaReply> responseObserver) {
+        Optional<Collection<FichaMedica>> fichasMedicas;
+        if (NumberUtils.isCreatable(request.getQuery())) {
 
-    }*/
+        }
+        else {
 
-    /*public void addFichaMedica(AddFichaMedicaReq request, StreamObserver<FichaMedicaReply> responseObserver) {
-        FichaMedica fichaMedica = FichaMedica.builder().numeroFicha(request.getFichaMedica().getNumeroFicha())
-                .raza(request.getFichaMedica().getRaza())
-                .tipo(request.getFichaMedica().getTipo())
-                .duenio(Persona.builder().rut(request.getFichaMedica().getDuenio().getRut())
-                        .nombre(request.getFichaMedica().getDuenio().getNombre())
-                        .direccion(request.getFichaMedica().getDuenio().getDireccion())
-                        .email(request.getFichaMedica().getDuenio().getEmail())
-                        .build())
-                .fechaNacimiento(LocalDate.parse(request.getFichaMedica().getFechaNacimiento()))
-                .especie(request.getFichaMedica().getEspecie())
-                .color(request.getFichaMedica().getColor())
-                .nombrePaciente(request.getFichaMedica().getNombrePaciente())
-                .sexo(Enum.valueOf(FichaMedica.Sexo.class, request.getFichaMedica().getSexo().name()))
-                .build();
+        }
+    }
+
+    /**
+     * Add a FichaMedica
+     * @param request to use, contains a Control
+     * @param responseObserver to use
+     */
+    public void addFichaMedica(AddFichaMedicaReq request, StreamObserver<FichaMedicaReply> responseObserver) {
+        FichaMedica fichaMedica = ModelAdapter.build(request.getFichaMedica());
         this.fivetController.addFichaMedica(fichaMedica);
         responseObserver.onNext(FichaMedicaReply.newBuilder().setFichaMedica(request.getFichaMedica()).build());
         responseObserver.onCompleted();
-    }*/
+    }
 
-
-
-    /*public static PersonaReply buildPersona (Persona persona) {
-
-    }*/
-
-    /*public static FichaMedicaReply buildPersona (Persona persona) {
-
-    }*/
-
+    public void addPersona(AddPersonaReq request, StreamObserver<PersonaReply> responeObserver) {
+        Persona persona = ModelAdapter.build(request.getPersona());
+        this.fivetController.addPersona(persona, "");
+        responeObserver.onNext(PersonaReply.newBuilder().setPersona(request.getPersona()).build());
+        responeObserver.onCompleted();
+    }
 }
