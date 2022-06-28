@@ -22,13 +22,18 @@ package cl.ucn.disc.pdis.fivet.services;
 import cl.ucn.disc.pdis.fivet.grpc.ControlEntity;
 import cl.ucn.disc.pdis.fivet.grpc.FichaMedicaEntity;
 import cl.ucn.disc.pdis.fivet.grpc.PersonaEntity;
+import cl.ucn.disc.pdis.fivet.grpc.SexoEntity;
 import cl.ucn.disc.pdis.fivet.model.Control;
 import cl.ucn.disc.pdis.fivet.model.FichaMedica;
 import cl.ucn.disc.pdis.fivet.model.Persona;
 import lombok.experimental.UtilityClass;
 
+import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * The model adapter
@@ -44,7 +49,12 @@ public final class ModelAdapter {
      * @return a personaEntity
      */
     public static PersonaEntity build(final Persona persona) {
-        return null;
+        return PersonaEntity.newBuilder()
+                .setNombre(persona.getNombre())
+                .setEmail(persona.getEmail())
+                .setRut(persona.getRut())
+                .setDireccion(persona.getDireccion())
+                .build();
     }
 
     /**
@@ -53,7 +63,12 @@ public final class ModelAdapter {
      * @return a persona java
      */
     public static Persona build(final PersonaEntity persona) {
-        return null;
+        return Persona.builder()
+                .nombre(persona.getNombre())
+                .email(persona.getEmail())
+                .rut(persona.getRut())
+                .direccion(persona.getDireccion())
+                .build();
     }
 
     /**
@@ -62,7 +77,18 @@ public final class ModelAdapter {
      * @return a FichaMedicaEntity
      */
     public static FichaMedicaEntity build(final FichaMedica fichaMedica) {
-        return null;
+        return FichaMedicaEntity.newBuilder()
+                .setColor(fichaMedica.getColor())
+                .setDuenio(build(fichaMedica.getDuenio()))
+                .setEspecie(fichaMedica.getEspecie())
+                .setFechaNacimiento(String.valueOf(fichaMedica.getFechaNacimiento()))
+                .setNombrePaciente(fichaMedica.getNombrePaciente())
+                .setNumeroFicha(fichaMedica.getNumeroFicha())
+                .setRaza(fichaMedica.getRaza())
+                .setSexo(SexoEntity.valueOf(fichaMedica.getSexo().name()))
+                .setTipo(fichaMedica.getTipo())
+                .addAllControles(buildControlsEntity(fichaMedica.getControles()))
+                .build();
     }
 
     /**
@@ -71,7 +97,18 @@ public final class ModelAdapter {
      * @return a FichaMedica java
      */
     public static FichaMedica build(final FichaMedicaEntity fichaMedica) {
-        return null;
+        return FichaMedica.builder()
+                .color(fichaMedica.getColor())
+                .duenio(build(fichaMedica.getDuenio()))
+                .especie(fichaMedica.getEspecie())
+                .fechaNacimiento(LocalDate.parse(fichaMedica.getFechaNacimiento()))
+                .nombrePaciente(fichaMedica.getNombrePaciente())
+                .numeroFicha(fichaMedica.getNumeroFicha())
+                .raza(fichaMedica.getRaza())
+                .sexo(FichaMedica.Sexo.valueOf(fichaMedica.getSexo().name()))
+                .tipo(fichaMedica.getTipo())
+                .controles(buildControles(fichaMedica.getControlesList()))
+                .build();
     }
 
     /**
@@ -80,7 +117,15 @@ public final class ModelAdapter {
      * @return ControlEntity
      */
     public static ControlEntity build(final Control control) {
-        return null;
+        return ControlEntity.newBuilder()
+                .setAltura(Float.valueOf(String.valueOf(control.getAltura())))
+                .setDiagnostico(control.getDiagnostico())
+                .setFecha(String.valueOf(control.getFecha()))
+                .setFichaMedica(build(control.getFichaMedica()))
+                .setPeso(Float.valueOf(String.valueOf(control.getPeso())))
+                .setTemperatura(Float.valueOf(String.valueOf(control.getTemperatura())))
+                .setVeterinario(build(control.getVeterinario()))
+                .build();
     }
 
     /**
@@ -89,7 +134,15 @@ public final class ModelAdapter {
      * @return a Control java
      */
     public static Control build(final ControlEntity control) {
-        return null;
+        return Control.builder()
+                .altura(Double.valueOf(control.getAltura()))
+                .diagnostico(control.getDiagnostico())
+                .fecha(build(control.getFecha()))
+                .fichaMedica(build(control.getFichaMedica()))
+                .peso(Double.valueOf(control.getPeso()))
+                .temperatura(Double.valueOf(control.getTemperatura()))
+                .veterinario(build(control.getVeterinario()))
+                .build();
     }
 
     /**
@@ -100,6 +153,33 @@ public final class ModelAdapter {
     public static ZonedDateTime build(final String dateTime) {
         return ZonedDateTime.parse(dateTime, DateTimeFormatter.ISO_ZONED_DATE_TIME);
     }
+
+    /**
+     * Collection of ControlEntity to Collection of Control
+     * @param controlsEntity to use
+     * @return Collection of Control
+     */
+    public static Collection<Control> buildControles(final Collection<ControlEntity> controlsEntity) {
+        List<Control> controles = new ArrayList<>();
+        for (ControlEntity controlEntity : controlsEntity) {
+            controles.add(build(controlEntity));
+        }
+        return controles;
+    }
+
+    /**
+     * Collection of Control to Collection of ControlEntity
+     * @param controles to use
+     * @return Collection of ControlEntity
+     */
+    public static Collection<ControlEntity> buildControlsEntity(final Collection<Control> controles) {
+        List<ControlEntity> controlsEntity = new ArrayList<>();
+        for (Control control : controles) {
+            controlsEntity.add(build(control));
+        }
+        return controlsEntity;
+    }
+
 
 
 }
