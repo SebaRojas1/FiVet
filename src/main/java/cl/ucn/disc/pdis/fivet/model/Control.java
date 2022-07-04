@@ -22,10 +22,7 @@ package cl.ucn.disc.pdis.fivet.model;
 import cl.ucn.disc.pdis.fivet.orm.BaseEntity;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.ZonedDateTime;
 
@@ -80,6 +77,7 @@ public class Control extends BaseEntity {
      * The veterinario
      */
     @Getter
+    @Setter
     @DatabaseField(foreign = true, foreignAutoRefresh = true, columnName = "veterinario_id", canBeNull = false)
     private Persona veterinario;
 
@@ -87,6 +85,7 @@ public class Control extends BaseEntity {
      * The ficha medica
      */
     @Getter
+    @Setter
     @DatabaseField(foreign = true, foreignAutoRefresh = true, columnName = "fichamedica_id")
     private FichaMedica fichaMedica;
 

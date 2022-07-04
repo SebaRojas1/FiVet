@@ -118,12 +118,11 @@ public final class ModelAdapter {
      */
     public static ControlEntity build(final Control control) {
         return ControlEntity.newBuilder()
-                .setAltura(Float.valueOf(String.valueOf(control.getAltura())))
+                .setAltura(control.getAltura())
                 .setDiagnostico(control.getDiagnostico())
                 .setFecha(String.valueOf(control.getFecha()))
-                .setFichaMedica(build(control.getFichaMedica()))
-                .setPeso(Float.valueOf(String.valueOf(control.getPeso())))
-                .setTemperatura(Float.valueOf(String.valueOf(control.getTemperatura())))
+                .setPeso(control.getPeso())
+                .setTemperatura(control.getTemperatura())
                 .setVeterinario(build(control.getVeterinario()))
                 .build();
     }
@@ -135,12 +134,12 @@ public final class ModelAdapter {
      */
     public static Control build(final ControlEntity control) {
         return Control.builder()
-                .altura(Double.valueOf(control.getAltura()))
+                .altura(control.getAltura())
                 .diagnostico(control.getDiagnostico())
                 .fecha(build(control.getFecha()))
                 .fichaMedica(build(control.getFichaMedica()))
-                .peso(Double.valueOf(control.getPeso()))
-                .temperatura(Double.valueOf(control.getTemperatura()))
+                .peso(control.getPeso())
+                .temperatura(control.getTemperatura())
                 .veterinario(build(control.getVeterinario()))
                 .build();
     }
@@ -173,6 +172,7 @@ public final class ModelAdapter {
      * @return Collection of ControlEntity
      */
     public static Collection<ControlEntity> buildControlsEntity(final Collection<Control> controles) {
+
         List<ControlEntity> controlsEntity = new ArrayList<>();
         for (Control control : controles) {
             controlsEntity.add(build(control));

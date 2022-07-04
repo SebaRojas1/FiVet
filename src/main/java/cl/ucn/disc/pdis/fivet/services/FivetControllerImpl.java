@@ -20,19 +20,23 @@
 package cl.ucn.disc.pdis.fivet.services;
 
 import cl.ucn.disc.pdis.fivet.model.Control;
+import cl.ucn.disc.pdis.fivet.model.Examen;
 import cl.ucn.disc.pdis.fivet.model.FichaMedica;
 import cl.ucn.disc.pdis.fivet.model.Persona;
 import cl.ucn.disc.pdis.fivet.orm.DAO;
 import cl.ucn.disc.pdis.fivet.orm.ORMLiteDAO;
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import com.j256.ormlite.support.ConnectionSource;
+import com.j256.ormlite.table.TableUtils;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import javax.swing.text.html.Option;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -61,6 +65,19 @@ public final class FivetControllerImpl implements FivetController {
         this.daoPersona = new ORMLiteDAO<>(cs, Persona.class);
         this.daoFichaMedica = new ORMLiteDAO<>(cs, FichaMedica.class);
 
+        // Create the table from Persona annotations
+        TableUtils.createTableIfNotExists(cs, Persona.class);
+
+        // Create the table from Persona annotations
+        TableUtils.createTableIfNotExists(cs, FichaMedica.class);
+
+        // Create the table from Persona annotations
+        TableUtils.createTableIfNotExists(cs, Control.class);
+
+        // Create the table from Persona annotations
+        TableUtils.createTableIfNotExists(cs, Examen.class);
+
+
     }
 
     /**
@@ -71,9 +88,16 @@ public final class FivetControllerImpl implements FivetController {
      */
     @Override
     public Optional<Persona> retrieveLogin(String login) {
+        Optional<Persona> persona = this.daoPersona.get("rut", login);
 
-        //TODO hacer el retrieve login y que se utilice dentro del autenticar
-        return Optional.empty();
+        if (persona.isEmpty()) {
+            persona = this.daoPersona.get("email", login);
+        }
+        if (persona.isEmpty()) {
+            return Optional.empty();
+        }
+
+        return persona;
     }
 
     /**
@@ -127,6 +151,11 @@ public final class FivetControllerImpl implements FivetController {
     @Override
     public void addControl(Control control) {
         Optional<FichaMedica> fichaMedica = this.daoFichaMedica.get(control.getFichaMedica().getNumeroFicha());
+        Optional<Persona> veterinario = this.daoPersona.get("rut", control.getVeterinario().getRut());
+        if (fichaMedica.isPresent() && veterinario.isPresent()) {
+            control.setVeterinario(veterinario.get());
+            control.setFichaMedica(fichaMedica.get());
+        }
         fichaMedica.get().getControles().add(control);
     }
 
@@ -137,6 +166,13 @@ public final class FivetControllerImpl implements FivetController {
      */
     @Override
     public void addFichaMedica(FichaMedica fichaMedica) {
+        Collection<Persona> personas = daoPersona.getAll();
+        for (Persona persona : personas) {
+            if (persona.getRut().equals(fichaMedica.getDuenio().getRut())) {
+                fichaMedica.setDuenio(persona);
+                break;
+            }
+        }
         this.daoFichaMedica.save(fichaMedica);
     }
 
@@ -153,12 +189,41 @@ public final class FivetControllerImpl implements FivetController {
 
     /**
      * search 0 or more FichaMedica and return a List of FichaMedica
-     *
      * @param q to use
+     * @param fichasMedicasDB the FichaMedica list of the data base
+     * @param atributo to use
+     * @return list of FichaMedica
      */
     @Override
-    public List<FichaMedica> searchFichaMedica(String q) {
-        return null;
+    public Collection<FichaMedica> searchFichaMedica(String q, Collection<FichaMedica> fichasMedicasDB
+            , Integer atributo) {
+        Collection<FichaMedica> fichasMedicas = new ArrayList<>();
+        if (atributo == 1) {
+            for (FichaMedica fichaMedica : fichasMedicasDB) {
+                int coincidencias = StringUtils.countMatches(q, fichaMedica.getDuenio().getRut());
+                if (coincidencias > 1) {
+                    fichasMedicas.add(fichaMedica);
+                }
+            }
+        }
+        else if (atributo == 2) {
+            for (FichaMedica fichaMedica : fichasMedicasDB) {
+                int coincidencias = StringUtils.countMatches(q, fichaMedica.getNombrePaciente());
+                if (coincidencias > 1) {
+                    fichasMedicas.add(fichaMedica);
+                }
+            }
+        }
+        else if (atributo == 3) {
+            for (FichaMedica fichaMedica : fichasMedicasDB) {
+                int coincidencias = StringUtils.countMatches(q, fichaMedica.getDuenio().getNombre());
+                if (coincidencias > 1) {
+                    fichasMedicas.add(fichaMedica);
+                }
+            }
+        }
+
+        return fichasMedicas;
     }
 
     /**
@@ -169,5 +234,16 @@ public final class FivetControllerImpl implements FivetController {
     @Override
     public void deletePersona(Integer idPersona) {
         //TODO hacer el delete en la implementacion
+    }
+
+    /**
+     * Return all FichaMedica in the system
+     *
+     * @return Collection of FichaMedica
+     */
+    @Override
+    public List<FichaMedica> getAllFichaMedica() {
+        List<FichaMedica> lista = this.daoFichaMedica.getAll();
+        return lista;
     }
 }

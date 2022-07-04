@@ -46,6 +46,7 @@ public final class Persona extends BaseEntity {
      * The direccion of the person
      */
     @Getter
+    @DatabaseField
     private String direccion;
 
     /**

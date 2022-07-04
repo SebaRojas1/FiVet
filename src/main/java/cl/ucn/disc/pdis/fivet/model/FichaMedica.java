@@ -23,10 +23,7 @@ import cl.ucn.disc.pdis.fivet.orm.BaseEntity;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.util.Collection;
@@ -101,8 +98,9 @@ public final class FichaMedica extends BaseEntity {
     /**
      * The duenio
      */
+    @Setter
     @Getter
-    @DatabaseField(foreign = true, foreignAutoRefresh = true, columnName = "persona_id")
+    @DatabaseField(foreign = true, foreignAutoRefresh = true, foreignColumnName = "id")
     private Persona duenio;
 
     /**

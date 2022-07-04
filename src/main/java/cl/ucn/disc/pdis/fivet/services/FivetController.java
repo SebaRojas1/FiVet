@@ -23,6 +23,7 @@ import cl.ucn.disc.pdis.fivet.model.Control;
 import cl.ucn.disc.pdis.fivet.model.FichaMedica;
 import cl.ucn.disc.pdis.fivet.model.Persona;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -74,8 +75,12 @@ public interface FivetController {
     /**
      * search 0 or more FichaMedica and return a List of FichaMedica
      * @param q to use
+     * @param fichasMedicasDB the FichaMedica list of the data base
+     * @param atributo to use
+     * @return list of FichaMedica
      */
-    List<FichaMedica> searchFichaMedica(String q);
+    Collection<FichaMedica> searchFichaMedica(String q, Collection<FichaMedica> fichasMedicasDB
+            , Integer atributo);
 
     /**
      * Delete a persona by id
@@ -84,4 +89,10 @@ public interface FivetController {
     void deletePersona(Integer idPersona);
 
     //TODO Metodo Ficha
+
+    /**
+     * Return all FichaMedica in the system
+     * @return Collection of FichaMedica
+     */
+    List<FichaMedica> getAllFichaMedica();
 }
