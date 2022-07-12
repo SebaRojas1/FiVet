@@ -27,6 +27,7 @@ import cl.ucn.disc.pdis.fivet.model.Control;
 import cl.ucn.disc.pdis.fivet.model.FichaMedica;
 import cl.ucn.disc.pdis.fivet.model.Persona;
 import lombok.experimental.UtilityClass;
+import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
@@ -41,6 +42,7 @@ import java.util.List;
  * @author Sebastian Rojas
  */
 @UtilityClass
+@Slf4j
 public final class ModelAdapter {
 
     /**

@@ -37,7 +37,7 @@ public interface FivetController {
      * @param login rut or email
      * @return a persona
      */
-    Optional<Persona> retrieveLogin(String login);
+    Optional<Persona> retrieveByLogin(String login);
 
     /**
      * Authentication of a person in the system

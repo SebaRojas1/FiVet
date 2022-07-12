@@ -50,7 +50,7 @@ public class FivetServer {
         DataPersisterManager.registerDataPersisters(ZonedDateTimeType.INSTANCE);
 
         log.debug("Building the FivetServiceImpl ...");
-        FivetServiceImpl fivetService = new FivetServiceImpl("jdbc:sqlite:fivet.db");
+        FivetServiceImpl fivetService = new FivetServiceImpl("jdbc:h2:mem:fivet");
 
         log.debug("Building and Starting the server ..");
 

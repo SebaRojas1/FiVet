@@ -23,6 +23,12 @@ import cl.ucn.disc.pdis.fivet.grpc.*;
 import cl.ucn.disc.pdis.fivet.model.Control;
 import cl.ucn.disc.pdis.fivet.model.FichaMedica;
 import cl.ucn.disc.pdis.fivet.model.Persona;
+import com.google.protobuf.Any;
+import com.google.rpc.Code;
+import com.google.rpc.ErrorInfo;
+import com.google.rpc.Status;
+import io.grpc.StatusRuntimeException;
+import io.grpc.protobuf.StatusProto;
 import io.grpc.stub.StreamObserver;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.math.NumberUtils;
@@ -49,13 +55,29 @@ public class FivetServiceImpl extends FivetServiceGrpc.FivetServiceImplBase {
     }
 
     /**
+     * Exception builder
+     * @param code to use
+     * @param message to send
+     * @return a exception
+     */
+    private StatusRuntimeException buildException(final Code code , final String message) {
+        return StatusProto.toStatusRuntimeException(Status.newBuilder()
+                .setCode(code.getNumber())
+                .setMessage(message)
+                .addDetails(Any.pack(ErrorInfo.newBuilder()
+                        .setReason(message)
+                        .build()))
+                .build());
+    }
+
+    /**
      * autenticate
      * @param request to use, contains a login, password
      * @param responseObserver to use
      */
     public void autenticate(AutenticateReq request, StreamObserver<PersonaReply> responseObserver) {
         // Retrieve from Controller
-        Optional<Persona> persona = this.fivetController.retrieveLogin(request.getLogin());
+        Optional<Persona> persona = this.fivetController.autenticar(request.getLogin(), request.getPassword());
         if (persona.isPresent()) {
             // Return the observer
             responseObserver.onNext(PersonaReply.newBuilder()
@@ -63,16 +85,7 @@ public class FivetServiceImpl extends FivetServiceGrpc.FivetServiceImplBase {
                     .build());
             responseObserver.onCompleted();
         } else {
-            responseObserver.onNext(PersonaReply.newBuilder()
-                    .setPersona(PersonaEntity.newBuilder()
-                            .setNombre("No")
-                            .setRut("No")
-                            .setEmail("No")
-                            .setDireccion("No")
-                            .build())
-                    .build());
-            responseObserver.onCompleted();
-            //responseObserver.onError(buildException(Code.PERMISSION_DENIED, "Wrong Credentials"));
+            responseObserver.onError(buildException(Code.PERMISSION_DENIED, "Wrong Credentials"));
         }
     }
 
@@ -85,14 +98,26 @@ public class FivetServiceImpl extends FivetServiceGrpc.FivetServiceImplBase {
         Optional<FichaMedica> fichaMedica = this.fivetController.getFichaMedica(request
                 .getControl().getFichaMedica().getNumeroFicha());
         if (fichaMedica.isPresent()) {
-            Control control = ModelAdapter.build(request.getControl());
-            this.fivetController.addControl(control);
-            responseObserver.onNext(FichaMedicaReply.newBuilder().setFichaMedica(ModelAdapter.build(fichaMedica.get()))
-                    .build());
-            responseObserver.onCompleted();
+            // ControlEntityAux
+            ControlEntity cEA = ControlEntity.newBuilder().build();
+            if (request.getControl().getAltura() != cEA.getAltura()
+                    && request.getControl().getDiagnostico() != cEA.getDiagnostico()
+                    && request.getControl().getFecha() != cEA.getFecha()
+                    && request.getControl().getPeso() != cEA.getPeso()
+                    && request.getControl().getTemperatura() != cEA.getTemperatura()
+                    && request.getControl().getVeterinario() != cEA.getVeterinario()) {
+                Control control = ModelAdapter.build(request.getControl());
+                this.fivetController.addControl(control);
+                responseObserver.onNext(FichaMedicaReply.newBuilder().setFichaMedica(ModelAdapter.build(fichaMedica.get()))
+                        .build());
+                responseObserver.onCompleted();
+            }
+            else {
+                responseObserver.onError(buildException(Code.INVALID_ARGUMENT, "Invalid argument"));
+            }
         }
         else {
-            //responseObserver.onError(buildException(Code.PERMISSION_DENIED, "Wrong control"));
+            responseObserver.onError(buildException(Code.INVALID_ARGUMENT, "Wrong fichaMedica on control"));
         }
     }
 
@@ -110,7 +135,7 @@ public class FivetServiceImpl extends FivetServiceGrpc.FivetServiceImplBase {
             responseObserver.onCompleted();
         }
         else {
-            //responseObserver.onError(buildException(Code.PERMISSION_DENIED, "Wrong number"));
+            responseObserver.onError(buildException(Code.NOT_FOUND, "FichaMedica Not Found"));
         }
     }
 
@@ -155,7 +180,7 @@ public class FivetServiceImpl extends FivetServiceGrpc.FivetServiceImplBase {
 
         // TODO hacer que no se repitan las fichas obtenidas o algo asi
 
-        if (fichasMedicasEncontradas.size() < 1) {
+        if (fichasMedicasEncontradas.stream().findFirst().isPresent()) {
             for (FichaMedica fichaMedica : fichasMedicasEncontradas) {
                 responseObserver.onNext(FichaMedicaReply.newBuilder().setFichaMedica(ModelAdapter.build(fichaMedica))
                         .build());
@@ -163,7 +188,7 @@ public class FivetServiceImpl extends FivetServiceGrpc.FivetServiceImplBase {
             responseObserver.onCompleted();
         }
         else {
-            //responseObserver.onError(buildException(Code.PERMISSION_DENIED, "Wrong number"));
+            responseObserver.onError(buildException(Code.NOT_FOUND, "FichaMedica Not Found"));
         }
     }
 
@@ -173,16 +198,46 @@ public class FivetServiceImpl extends FivetServiceGrpc.FivetServiceImplBase {
      * @param responseObserver to use
      */
     public void addFichaMedica(AddFichaMedicaReq request, StreamObserver<FichaMedicaReply> responseObserver) {
-        FichaMedica fichaMedica = ModelAdapter.build(request.getFichaMedica());
-        this.fivetController.addFichaMedica(fichaMedica);
-        responseObserver.onNext(FichaMedicaReply.newBuilder().setFichaMedica(request.getFichaMedica()).build());
-        responseObserver.onCompleted();
+        // FichaMedicaAux
+        FichaMedicaEntity fMA = FichaMedicaEntity.newBuilder().build();
+        if (request.getFichaMedica().getNumeroFicha() != fMA.getNumeroFicha()
+                && request.getFichaMedica().getNombrePaciente() != fMA.getNombrePaciente()
+                && request.getFichaMedica().getTipo() != fMA.getTipo()
+                && request.getFichaMedica().getSexo() != fMA.getSexo()
+                && request.getFichaMedica().getRaza() != fMA.getRaza()
+                && request.getFichaMedica().getColor() != fMA.getColor()
+                && request.getFichaMedica().getEspecie() != fMA.getEspecie()
+                && request.getFichaMedica().getFechaNacimiento() != fMA.getFechaNacimiento()) {
+            FichaMedica fichaMedica = ModelAdapter.build(request.getFichaMedica());
+            if (!fivetController.getFichaMedica(fichaMedica.getNumeroFicha()).isPresent()) {
+                this.fivetController.addFichaMedica(fichaMedica);
+                responseObserver.onNext(FichaMedicaReply.newBuilder().setFichaMedica(request.getFichaMedica()).build());
+                responseObserver.onCompleted();
+            }
+            else {
+                responseObserver.onError(buildException(Code.ALREADY_EXISTS, "FichaMedica already exists"));
+            }
+        }
+        else {
+            responseObserver.onError(buildException(Code.INVALID_ARGUMENT, "Invalid argument"));
+        }
     }
 
-    public void addPersona(AddPersonaReq request, StreamObserver<PersonaReply> responeObserver) {
+    public void addPersona(AddPersonaReq request, StreamObserver<PersonaReply> responseObserver) {
         Persona persona = ModelAdapter.build(request.getPersona());
-        this.fivetController.addPersona(persona, "a");
-        responeObserver.onNext(PersonaReply.newBuilder().setPersona(request.getPersona()).build());
-        responeObserver.onCompleted();
+        if (!persona.getRut().isEmpty() && !persona.getEmail().isEmpty() && !persona.getNombre().isEmpty()) {
+            if (!fivetController.retrieveByLogin(persona.getRut()).isPresent()
+                    && !fivetController.retrieveByLogin(persona.getEmail()).isPresent()) {
+                this.fivetController.addPersona(persona, "a");
+                responseObserver.onNext(PersonaReply.newBuilder().setPersona(request.getPersona()).build());
+                responseObserver.onCompleted();
+            }
+            else {
+                responseObserver.onError(buildException(Code.ALREADY_EXISTS, "Persona already exists"));
+            }
+        }
+        else {
+            responseObserver.onError(buildException(Code.INVALID_ARGUMENT, "Invalid argument"));
+        }
     }
 }

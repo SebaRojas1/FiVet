@@ -87,7 +87,7 @@ public final class FivetControllerImpl implements FivetController {
      * @return a persona
      */
     @Override
-    public Optional<Persona> retrieveLogin(String login) {
+    public Optional<Persona> retrieveByLogin(String login) {
         Optional<Persona> persona = this.daoPersona.get("rut", login);
 
         if (persona.isEmpty()) {
@@ -149,7 +149,7 @@ public final class FivetControllerImpl implements FivetController {
      * @param control to add
      */
     @Override
-    public void addControl(Control control) {
+    public void addControl(@NonNull Control control) {
         Optional<FichaMedica> fichaMedica = this.daoFichaMedica.get(control.getFichaMedica().getNumeroFicha());
         Optional<Persona> veterinario = this.daoPersona.get("rut", control.getVeterinario().getRut());
         if (fichaMedica.isPresent() && veterinario.isPresent()) {
@@ -165,7 +165,7 @@ public final class FivetControllerImpl implements FivetController {
      * @param fichaMedica to add
      */
     @Override
-    public void addFichaMedica(FichaMedica fichaMedica) {
+    public void addFichaMedica(@NonNull FichaMedica fichaMedica) {
         Collection<Persona> personas = daoPersona.getAll();
         for (Persona persona : personas) {
             if (persona.getRut().equals(fichaMedica.getDuenio().getRut())) {
