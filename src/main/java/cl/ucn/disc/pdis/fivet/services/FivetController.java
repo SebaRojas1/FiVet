@@ -28,19 +28,21 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * The Fivet Controller interface
+ * The Fivet Controller interface.
  */
 public interface FivetController {
 
     /**
-     * Check if the Email or Rut exists in the system
+     * Check if the Email or Rut exists in the system.
+     *
      * @param login rut or email
      * @return a persona
      */
     Optional<Persona> retrieveByLogin(String login);
 
     /**
-     * Authentication of a person in the system
+     * Authentication of a person in the system.
+     *
      * @param login The login account
      * @param password The password of the user
      * @return a persona
@@ -48,50 +50,54 @@ public interface FivetController {
     Optional<Persona> autenticar(String login, String password);
 
     /**
-     * add a Persona in the system
+     * add a Persona in the system.
+     *
      * @param persona to add
      * @param password to hash
      */
     void addPersona(Persona persona, String password);
 
     /**
-     * add a Control in a FichaMedica
-     * @param control to add
+     * add a Control in a FichaMedica.
+     *
+     * @param control to use
      */
     void addControl(Control control);
 
     /**
-     * add a FichaMedica in the system
+     * add a FichaMedica in the system.
+     *
      * @param fichaMedica to add
      */
     void addFichaMedica(FichaMedica fichaMedica);
 
     /**
-     * get a FichaMedica by the numeroFicha
+     * get a FichaMedica by the numeroFicha.
+     *
      * @param numeroFicha to use
      */
     Optional<FichaMedica> getFichaMedica(Integer numeroFicha);
 
     /**
-     * search 0 or more FichaMedica and return a List of FichaMedica
+     * if the strings matches return true, false in other case.
+     *
      * @param q to use
-     * @param fichasMedicasDB the FichaMedica list of the data base
      * @param atributo to use
+     * @return a boolean
+     */
+    boolean stringMatch(String q, String atributo);
+
+    /**
+     * return a filtered list of FichaMedica.
+     *
+     * @param fichaMedicaEncontradas List of FichaMedica
      * @return list of FichaMedica
      */
-    Collection<FichaMedica> searchFichaMedica(String q, Collection<FichaMedica> fichasMedicasDB
-            , Integer atributo);
+    Collection<FichaMedica> filterRepeatedFichaMedica(Collection<FichaMedica> fichaMedicaEncontradas);
 
     /**
-     * Delete a persona by id
-     * @param idPersona the id
-     */
-    void deletePersona(Integer idPersona);
-
-    //TODO Metodo Ficha
-
-    /**
-     * Return all FichaMedica in the system
+     * Return all FichaMedica in the system.
+     *
      * @return Collection of FichaMedica
      */
     List<FichaMedica> getAllFichaMedica();

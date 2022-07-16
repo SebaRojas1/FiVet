@@ -31,13 +31,14 @@ import java.io.IOException;
 import java.sql.SQLException;
 
 /**
- * The server of Fivet
+ * The server of Fivet.
  */
 @Slf4j
 public class FivetServer {
 
     /**
-     * The Main
+     * The Main.
+     *
      * @param args to use
      */
     @SneakyThrows({InterruptedException.class, IOException.class})

@@ -19,7 +19,17 @@
 
 package cl.ucn.disc.pdis.fivet.services;
 
-import cl.ucn.disc.pdis.fivet.grpc.*;
+import cl.ucn.disc.pdis.fivet.grpc.AddControlReq;
+import cl.ucn.disc.pdis.fivet.grpc.AddFichaMedicaReq;
+import cl.ucn.disc.pdis.fivet.grpc.AddPersonaReq;
+import cl.ucn.disc.pdis.fivet.grpc.AutenticateReq;
+import cl.ucn.disc.pdis.fivet.grpc.ControlEntity;
+import cl.ucn.disc.pdis.fivet.grpc.FichaMedicaEntity;
+import cl.ucn.disc.pdis.fivet.grpc.FichaMedicaReply;
+import cl.ucn.disc.pdis.fivet.grpc.FivetServiceGrpc;
+import cl.ucn.disc.pdis.fivet.grpc.PersonaReply;
+import cl.ucn.disc.pdis.fivet.grpc.RetrieveFichaMedicaReq;
+import cl.ucn.disc.pdis.fivet.grpc.SearchFichaMedicaReq;
 import cl.ucn.disc.pdis.fivet.model.Control;
 import cl.ucn.disc.pdis.fivet.model.FichaMedica;
 import cl.ucn.disc.pdis.fivet.model.Persona;
@@ -38,6 +48,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
 
+
+/**
+ * The fivet service impl.
+ */
 @Slf4j
 public class FivetServiceImpl extends FivetServiceGrpc.FivetServiceImplBase {
 
@@ -47,20 +61,22 @@ public class FivetServiceImpl extends FivetServiceGrpc.FivetServiceImplBase {
     private final FivetController fivetController;
 
     /**
+     * Fivet service impl instance.
+     *
      * @param databaseUrl to use.
-     * @throws SQLException
      */
     public FivetServiceImpl(String databaseUrl) throws SQLException {
         this.fivetController = new FivetControllerImpl(databaseUrl, true);
     }
 
     /**
-     * Exception builder
+     * Exception builder.
+     *
      * @param code to use
      * @param message to send
      * @return a exception
      */
-    private StatusRuntimeException buildException(final Code code , final String message) {
+    private StatusRuntimeException buildException(final Code code, final String message) {
         return StatusProto.toStatusRuntimeException(Status.newBuilder()
                 .setCode(code.getNumber())
                 .setMessage(message)
@@ -71,7 +87,8 @@ public class FivetServiceImpl extends FivetServiceGrpc.FivetServiceImplBase {
     }
 
     /**
-     * autenticate
+     * autenticate.
+     *
      * @param request to use, contains a login, password
      * @param responseObserver to use
      */
@@ -90,16 +107,19 @@ public class FivetServiceImpl extends FivetServiceGrpc.FivetServiceImplBase {
     }
 
     /**
-     * add a control
+     * add a control.
+     *
      * @param request to use, contains a Control
      * @param responseObserver to use
      */
     public void addControl(AddControlReq request, StreamObserver<FichaMedicaReply> responseObserver) {
         Optional<FichaMedica> fichaMedica = this.fivetController.getFichaMedica(request
                 .getControl().getFichaMedica().getNumeroFicha());
+        // Check if the FichaMedica asociated exists in the system
         if (fichaMedica.isPresent()) {
             // ControlEntityAux
             ControlEntity cEA = ControlEntity.newBuilder().build();
+            // Check if the attributes required are not null and add the control
             if (request.getControl().getAltura() != cEA.getAltura()
                     && request.getControl().getDiagnostico() != cEA.getDiagnostico()
                     && request.getControl().getFecha() != cEA.getFecha()
@@ -108,39 +128,40 @@ public class FivetServiceImpl extends FivetServiceGrpc.FivetServiceImplBase {
                     && request.getControl().getVeterinario() != cEA.getVeterinario()) {
                 Control control = ModelAdapter.build(request.getControl());
                 this.fivetController.addControl(control);
-                responseObserver.onNext(FichaMedicaReply.newBuilder().setFichaMedica(ModelAdapter.build(fichaMedica.get()))
+                responseObserver.onNext(FichaMedicaReply.newBuilder().setFichaMedica(ModelAdapter
+                                .build(fichaMedica.get()))
                         .build());
                 responseObserver.onCompleted();
-            }
-            else {
+            } else {
                 responseObserver.onError(buildException(Code.INVALID_ARGUMENT, "Invalid argument"));
             }
-        }
-        else {
+        } else {
             responseObserver.onError(buildException(Code.INVALID_ARGUMENT, "Wrong fichaMedica on control"));
         }
     }
 
     /**
-     * retrieve a FichaMedica
+     * retrieve a FichaMedica.
+     *
      * @param request to use, contains a NumeroFicha
      * @param responseObserver to use
      */
     public void retrieveFichaMedica(RetrieveFichaMedicaReq request,
                                     StreamObserver<FichaMedicaReply> responseObserver) {
         Optional<FichaMedica> fichaMedica = this.fivetController.getFichaMedica(request.getNumeroFicha());
+        // Check if the fichaMedica exists
         if (fichaMedica.isPresent()) {
             responseObserver.onNext(FichaMedicaReply.newBuilder().setFichaMedica(ModelAdapter.build(fichaMedica.get()))
                     .build());
             responseObserver.onCompleted();
-        }
-        else {
+        } else {
             responseObserver.onError(buildException(Code.NOT_FOUND, "FichaMedica Not Found"));
         }
     }
 
     /**
-     * Search a FichaMedica by a q
+     * Search a FichaMedica by a q.
+     *
      * @param request to use, contains a q
      * @param responseObserver to use
      */
@@ -148,58 +169,54 @@ public class FivetServiceImpl extends FivetServiceGrpc.FivetServiceImplBase {
 
         Collection<FichaMedica> fichasMedicasEncontradas = new ArrayList<>();
         Collection<FichaMedica> fichasMedicasBD = this.fivetController.getAllFichaMedica();
-        // Busqueda si el query contiene numeros
+        // Search if the query is a number
         if (NumberUtils.isCreatable(request.getQuery())) {
-            // Busqueda por numero de ficha
-            Optional<FichaMedica> fichaMedicaNumero = this.fivetController.getFichaMedica(Integer.valueOf(request.getQuery()));
-            if (fichaMedicaNumero.isPresent()) {
-                fichasMedicasEncontradas.add(fichaMedicaNumero.get());
+            // search by numeroFicha
+            Optional<FichaMedica> fichaMedicaNumero = this.fivetController
+                    .getFichaMedica(Integer.valueOf(request.getQuery()));
+            fichaMedicaNumero.ifPresent(fichasMedicasEncontradas::add);
+        }
+        // Search by coincidences on the Duenio rut
+        for (FichaMedica fichaMedica : fichasMedicasBD) {
+            if (fivetController.stringMatch(request.getQuery(), fichaMedica.getDuenio().getRut())) {
+                fichasMedicasEncontradas.add(fichaMedica);
             }
-            // Busqueda por coincidencias en el rut
-            Collection<FichaMedica> fichasMedicasRut = this.fivetController.searchFichaMedica
-                    (request.getQuery(), fichasMedicasBD, 1);
-            fichasMedicasEncontradas.addAll(fichasMedicasRut);
         }
-        // Busqueda si el query tiene letras o simbolos
-        else {
-            // Busqueda por coincidencias en el rut
-            Collection<FichaMedica> fichasMedicasRut = this.fivetController.searchFichaMedica
-                    (request.getQuery(), fichasMedicasBD, 1);
-            fichasMedicasEncontradas.addAll(fichasMedicasRut);
-
-            // Busqueda por nombre del paciente
-            Collection<FichaMedica> fichasMedicasNomPaciente = this.fivetController.searchFichaMedica
-                    (request.getQuery(), fichasMedicasBD, 2);
-            fichasMedicasEncontradas.addAll(fichasMedicasNomPaciente);
-
-            // Busqueda por nombre del dueño
-            Collection<FichaMedica> fichasMedicasNomDuenio = this.fivetController.searchFichaMedica
-                    (request.getQuery(), fichasMedicasBD, 3);
-            fichasMedicasEncontradas.addAll(fichasMedicasNomDuenio);
+        // Search by nombrePaciente
+        for (FichaMedica fichaMedica : fichasMedicasBD) {
+            if (fivetController.stringMatch(request.getQuery(), fichaMedica.getNombrePaciente())) {
+                fichasMedicasEncontradas.add(fichaMedica);
+            }
         }
-
-        // TODO hacer que no se repitan las fichas obtenidas o algo asi
-
-        if (fichasMedicasEncontradas.stream().findFirst().isPresent()) {
-            for (FichaMedica fichaMedica : fichasMedicasEncontradas) {
+        // Search by name of the duenio
+        for (FichaMedica fichaMedica : fichasMedicasBD) {
+            if (fivetController.stringMatch(request.getQuery(), fichaMedica.getDuenio().getNombre())) {
+                fichasMedicasEncontradas.add(fichaMedica);
+            }
+        }
+        // Check if fichaMedica were founded
+        if (fichasMedicasEncontradas.size() > 0) {
+            // Filter repeated FichaMedica founded
+            Collection<FichaMedica> fichaMedicaFiltradas = fivetController
+                    .filterRepeatedFichaMedica(fichasMedicasEncontradas);
+            for (FichaMedica fichaMedica : fichaMedicaFiltradas) {
                 responseObserver.onNext(FichaMedicaReply.newBuilder().setFichaMedica(ModelAdapter.build(fichaMedica))
                         .build());
+                responseObserver.onCompleted();
             }
-            responseObserver.onCompleted();
-        }
-        else {
-            responseObserver.onError(buildException(Code.NOT_FOUND, "FichaMedica Not Found"));
         }
     }
 
     /**
-     * Add a FichaMedica
+     * Add a FichaMedica.
+     *
      * @param request to use, contains a Control
      * @param responseObserver to use
      */
     public void addFichaMedica(AddFichaMedicaReq request, StreamObserver<FichaMedicaReply> responseObserver) {
         // FichaMedicaAux
         FichaMedicaEntity fMA = FichaMedicaEntity.newBuilder().build();
+        // Check if the attributes required are not null and add the FichaMedica
         if (request.getFichaMedica().getNumeroFicha() != fMA.getNumeroFicha()
                 && request.getFichaMedica().getNombrePaciente() != fMA.getNombrePaciente()
                 && request.getFichaMedica().getTipo() != fMA.getTipo()
@@ -209,34 +226,39 @@ public class FivetServiceImpl extends FivetServiceGrpc.FivetServiceImplBase {
                 && request.getFichaMedica().getEspecie() != fMA.getEspecie()
                 && request.getFichaMedica().getFechaNacimiento() != fMA.getFechaNacimiento()) {
             FichaMedica fichaMedica = ModelAdapter.build(request.getFichaMedica());
+            // Check if the FichaMedica already exists
             if (!fivetController.getFichaMedica(fichaMedica.getNumeroFicha()).isPresent()) {
                 this.fivetController.addFichaMedica(fichaMedica);
                 responseObserver.onNext(FichaMedicaReply.newBuilder().setFichaMedica(request.getFichaMedica()).build());
                 responseObserver.onCompleted();
-            }
-            else {
+            } else {
                 responseObserver.onError(buildException(Code.ALREADY_EXISTS, "FichaMedica already exists"));
             }
-        }
-        else {
+        } else {
             responseObserver.onError(buildException(Code.INVALID_ARGUMENT, "Invalid argument"));
         }
     }
 
+    /**
+     * add a Persona to the system.
+     *
+     * @param request contains a Persona
+     * @param responseObserver to use
+     */
     public void addPersona(AddPersonaReq request, StreamObserver<PersonaReply> responseObserver) {
         Persona persona = ModelAdapter.build(request.getPersona());
+        // Check if the attributes required are valid
         if (!persona.getRut().isEmpty() && !persona.getEmail().isEmpty() && !persona.getNombre().isEmpty()) {
+            // Check if the Persona already exists
             if (!fivetController.retrieveByLogin(persona.getRut()).isPresent()
                     && !fivetController.retrieveByLogin(persona.getEmail()).isPresent()) {
                 this.fivetController.addPersona(persona, "a");
                 responseObserver.onNext(PersonaReply.newBuilder().setPersona(request.getPersona()).build());
                 responseObserver.onCompleted();
-            }
-            else {
+            } else {
                 responseObserver.onError(buildException(Code.ALREADY_EXISTS, "Persona already exists"));
             }
-        }
-        else {
+        } else {
             responseObserver.onError(buildException(Code.INVALID_ARGUMENT, "Invalid argument"));
         }
     }

@@ -48,17 +48,24 @@ import java.util.Optional;
 @Slf4j
 public final class FivetControllerImpl implements FivetController {
 
-    /**
+    /*
      * The dao of the entitys
      */
-    private DAO<Persona> daoPersona;
-    private DAO<FichaMedica> daoFichaMedica;
+    private final DAO<Persona> daoPersona;
+    private final DAO<FichaMedica> daoFichaMedica;
 
-    /**
+    /*
      * The Hasher.
      */
-    private final static PasswordEncoder PASSWORD_ENCODER = new Argon2PasswordEncoder();
+    private final PasswordEncoder passwordEncoder = new Argon2PasswordEncoder();
 
+    /**
+     * FivetController constructor.
+     *
+     * @param dbUrl Database url
+     * @param b bool
+     * @throws SQLException to throw
+     */
     public FivetControllerImpl(String dbUrl, boolean b) throws SQLException {
 
         ConnectionSource cs = new JdbcConnectionSource(dbUrl);
@@ -81,7 +88,7 @@ public final class FivetControllerImpl implements FivetController {
     }
 
     /**
-     * Check if the Email or Rut exists in the system
+     * Check if the Email or Rut exists in the system.
      *
      * @param login rut or email
      * @return a persona
@@ -89,27 +96,26 @@ public final class FivetControllerImpl implements FivetController {
     @Override
     public Optional<Persona> retrieveByLogin(String login) {
         Optional<Persona> persona = this.daoPersona.get("rut", login);
-
+        // Check if the Persona is already founded with the rut
         if (persona.isEmpty()) {
             persona = this.daoPersona.get("email", login);
         }
+        // Check if the Persona is already founded with the email
         if (persona.isEmpty()) {
             return Optional.empty();
         }
-
         return persona;
     }
 
     /**
-     * Authentication of a person in the system
+     * Authentication of a person in the system.
+     *
      * @param login The login account
      * @param password The password of the user
      * @return a Persona
      */
     @Override
     public Optional<Persona> autenticar(String login, String password) {
-
-
         Optional<Persona> persona = this.daoPersona.get("rut", login);
 
         // Verify if the rut is in the database
@@ -123,7 +129,7 @@ public final class FivetControllerImpl implements FivetController {
         }
 
         // Check the password to verify that is the correct password
-        if (PASSWORD_ENCODER.matches(password, persona.get().getPassword())) {
+        if (passwordEncoder.matches(password, persona.get().getPassword())) {
             return persona;
         }
         // Wrong password, return an empty
@@ -131,20 +137,21 @@ public final class FivetControllerImpl implements FivetController {
     }
 
     /**
-     * Save a persona into the backend
+     * Save a persona into the backend.
+     *
      * @param persona  to add
      * @param password to hash
      */
     @Override
     public void addPersona(@NonNull Persona persona, @NonNull String password) {
         // Hash password
-        persona.setPassword(PASSWORD_ENCODER.encode(password));
+        persona.setPassword(passwordEncoder.encode(password));
         // Save the persona
         this.daoPersona.save(persona);
     }
 
     /**
-     * add a Control in a FichaMedica
+     * add a Control in a FichaMedica.
      *
      * @param control to add
      */
@@ -152,6 +159,7 @@ public final class FivetControllerImpl implements FivetController {
     public void addControl(@NonNull Control control) {
         Optional<FichaMedica> fichaMedica = this.daoFichaMedica.get(control.getFichaMedica().getNumeroFicha());
         Optional<Persona> veterinario = this.daoPersona.get("rut", control.getVeterinario().getRut());
+        // Check if the FichaMedica and the Veterinario is present in the system
         if (fichaMedica.isPresent() && veterinario.isPresent()) {
             control.setVeterinario(veterinario.get());
             control.setFichaMedica(fichaMedica.get());
@@ -159,8 +167,7 @@ public final class FivetControllerImpl implements FivetController {
         fichaMedica.get().getControles().add(control);
     }
 
-    /**
-     * add a FichaMedica in the system
+    /** add a FichaMedica in the system.
      *
      * @param fichaMedica to add
      */
@@ -168,6 +175,7 @@ public final class FivetControllerImpl implements FivetController {
     public void addFichaMedica(@NonNull FichaMedica fichaMedica) {
         Collection<Persona> personas = daoPersona.getAll();
         for (Persona persona : personas) {
+            // Check if the duenio exists in the system
             if (persona.getRut().equals(fichaMedica.getDuenio().getRut())) {
                 fichaMedica.setDuenio(persona);
                 break;
@@ -177,7 +185,7 @@ public final class FivetControllerImpl implements FivetController {
     }
 
     /**
-     * get a FichaMedica by the numeroFicha
+     * get a FichaMedica by the numeroFicha.
      *
      * @param numeroFicha to use
      */
@@ -188,56 +196,49 @@ public final class FivetControllerImpl implements FivetController {
     }
 
     /**
-     * search 0 or more FichaMedica and return a List of FichaMedica
+     * if the strings matches return true, false in other case.
+     *
      * @param q to use
-     * @param fichasMedicasDB the FichaMedica list of the data base
      * @param atributo to use
+     * @return a boolean
+     */
+    @Override
+    public boolean stringMatch(String q, String atributo) {
+        int coincidencias = StringUtils.countMatches(q, atributo);
+        if (coincidencias > 0) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * return a filtered list of FichaMedica.
+     *
+     * @param fichaMedicaEncontradas List of FichaMedica
      * @return list of FichaMedica
      */
     @Override
-    public Collection<FichaMedica> searchFichaMedica(String q, Collection<FichaMedica> fichasMedicasDB
-            , Integer atributo) {
-        Collection<FichaMedica> fichasMedicas = new ArrayList<>();
-        if (atributo == 1) {
-            for (FichaMedica fichaMedica : fichasMedicasDB) {
-                int coincidencias = StringUtils.countMatches(q, fichaMedica.getDuenio().getRut());
-                if (coincidencias > 1) {
-                    fichasMedicas.add(fichaMedica);
+    public Collection<FichaMedica> filterRepeatedFichaMedica(Collection<FichaMedica> fichaMedicaEncontradas) {
+        Collection<FichaMedica> fichaMedicaNoRepeditas = new ArrayList<>();
+        for (FichaMedica fichaMedicaEncontrada : fichaMedicaEncontradas) {
+            boolean repetida = false;
+            // search repeated FichaMedica
+            for (FichaMedica fichaMedica : fichaMedicaNoRepeditas) {
+                if (fichaMedicaEncontrada.getNumeroFicha() == fichaMedica.getNumeroFicha()) {
+                    repetida = true;
+                    break;
                 }
             }
-        }
-        else if (atributo == 2) {
-            for (FichaMedica fichaMedica : fichasMedicasDB) {
-                int coincidencias = StringUtils.countMatches(q, fichaMedica.getNombrePaciente());
-                if (coincidencias > 1) {
-                    fichasMedicas.add(fichaMedica);
-                }
+            // add no repeated FichaMedica
+            if (repetida == false) {
+                fichaMedicaNoRepeditas.add(fichaMedicaEncontrada);
             }
         }
-        else if (atributo == 3) {
-            for (FichaMedica fichaMedica : fichasMedicasDB) {
-                int coincidencias = StringUtils.countMatches(q, fichaMedica.getDuenio().getNombre());
-                if (coincidencias > 1) {
-                    fichasMedicas.add(fichaMedica);
-                }
-            }
-        }
-
-        return fichasMedicas;
+        return fichaMedicaNoRepeditas;
     }
 
     /**
-     * Delete a persona by id
-     *
-     * @param idPersona the id
-     */
-    @Override
-    public void deletePersona(Integer idPersona) {
-        //TODO hacer el delete en la implementacion
-    }
-
-    /**
-     * Return all FichaMedica in the system
+     * Return all FichaMedica in the system.
      *
      * @return Collection of FichaMedica
      */

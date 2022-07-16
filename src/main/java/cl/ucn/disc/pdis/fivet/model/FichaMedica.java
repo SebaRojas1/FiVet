@@ -23,13 +23,17 @@ import cl.ucn.disc.pdis.fivet.orm.BaseEntity;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDate;
 import java.util.Collection;
 
 /**
- * The model of the FichaMedica object
+ * The model of the FichaMedica object.
  *
  * @author Sebastian Rojas
  */
@@ -40,63 +44,63 @@ import java.util.Collection;
 public final class FichaMedica extends BaseEntity {
 
     /**
-     * The number of the record card
+     * The number of the record card.
      */
     @Getter
     @DatabaseField(canBeNull = false, unique = true)
     private Integer numeroFicha;
 
     /**
-     * The patient's name
+     * The patient's name.
      */
     @Getter
     @DatabaseField(canBeNull = false)
     private String nombrePaciente;
 
     /**
-     * The especie of the patient
+     * The especie of the patient.
      */
     @Getter
     @DatabaseField(canBeNull = false)
     private String especie;
 
     /**
-     * The date of birth of the patient
+     * The date of birth of the patient.
      */
     @Getter
     @DatabaseField(canBeNull = false)
     private LocalDate fechaNacimiento;
 
     /**
-     * The raza of the patient
+     * The raza of the patient.
      */
     @Getter
     @DatabaseField(canBeNull = false)
     private String raza;
 
     /**
-     * The sexo of the patient
+     * The sexo of the patient.
      */
     @Getter
     @DatabaseField(canBeNull = false)
     private Sexo sexo;
 
     /**
-     * The color of the patient
+     * The color of the patient.
      */
     @Getter
     @DatabaseField(canBeNull = false)
     private String color;
 
     /**
-     * The tipo of animal
+     * The tipo of animal.
      */
     @Getter
     @DatabaseField(canBeNull = false)
     private String tipo;
 
     /**
-     * The duenio
+     * The duenio.
      */
     @Setter
     @Getter
@@ -104,21 +108,21 @@ public final class FichaMedica extends BaseEntity {
     private Persona duenio;
 
     /**
-     * The controles
+     * The controles.
      */
     @Getter
     @ForeignCollectionField(eager = true, orderColumnName = "fecha")
     private Collection<Control> controles;
 
     /**
-     * Append a control
+     * Append a control.
      */
     public void add(Control control) {
         this.controles.add(control);
     }
 
     /**
-     * The sexo
+     * The sexo.
      */
     public enum Sexo {
         MACHO,

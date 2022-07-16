@@ -23,54 +23,60 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- *
+ * The dao.
  *
  * @author Sebastian Rojas
  * @param <T> the base entity
  */
-public interface DAO <T extends BaseEntity> {
+public interface DAO<T extends BaseEntity> {
 
     /**
-     * Get optional, T
+     * Get optional, T.
+     *
      * @param id to search
      * @return a T
      */
     Optional<T> get(Integer id);
 
     /**
-     * Get optional, T
-     * @param attrib
-     * @param value
+     * Get optional, T.
+     *
+     * @param attrib attribute in the table
+     * @param value value to get a row
      * @return a T
      */
     Optional<T> get(String attrib, Object value);
 
     /**
-     * Get all the Ts
-     * @return
+     * Get all the Ts.
+     *
+     * @return all entities
      */
     List<T> getAll();
 
     /**
-     * Save a T
-     * @param t
+     * Save a T.
+     *
+     * @param t to save
      */
     void save(T t);
 
     /**
-     * Delete a T
-     * @param t
+     * Delete a T.
+     *
+     * @param t to delete
      */
     void delete(T t);
 
     /**
      * Delete a T with id.
-     * @param id
+     *
+     * @param id to find and delete
      */
     void delete(Integer id);
 
     /**
-     * Drop and create a new table
+     * Drop and create a new table.
      */
     void dropAndCreateTable();
 }

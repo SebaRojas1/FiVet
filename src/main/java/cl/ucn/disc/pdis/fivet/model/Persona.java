@@ -22,10 +22,14 @@ package cl.ucn.disc.pdis.fivet.model;
 import cl.ucn.disc.pdis.fivet.orm.BaseEntity;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
- * The model of the persona object
+ * The model of the persona object.
  *
  * @author Sebastian Rojas
  */
@@ -36,35 +40,35 @@ import lombok.*;
 public final class Persona extends BaseEntity {
 
     /**
-     * The nombre of the person
+     * The nombre of the person.
      */
     @Getter
     @DatabaseField(canBeNull = false)
     private String nombre;
 
     /**
-     * The direccion of the person
+     * The direccion of the person.
      */
     @Getter
     @DatabaseField
     private String direccion;
 
     /**
-     * The email of the person
+     * The email of the person.
      */
     @Getter
     @DatabaseField(canBeNull = false, unique = true)
     private String email;
 
     /**
-     * The rut of the person
+     * The rut of the person.
      */
     @Getter
     @DatabaseField(canBeNull = false, unique = true)
     private String rut;
 
     /**
-     * The password of the persona
+     * The password of the persona.
      */
     @Getter
     @Setter

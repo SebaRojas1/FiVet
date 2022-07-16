@@ -22,13 +22,17 @@ package cl.ucn.disc.pdis.fivet.model;
 import cl.ucn.disc.pdis.fivet.orm.BaseEntity;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.ZonedDateTime;
 
 
 /**
- * The model of the control object created for the patients
+ * The model of the control object created for the patients.
  *
  * @author Sebastian Rojas
  */
@@ -39,42 +43,42 @@ import java.time.ZonedDateTime;
 public class Control extends BaseEntity {
 
     /**
-     * The fecha of the control carried out
+     * The fecha of the control carried out.
      */
     @Getter
     @DatabaseField(canBeNull = false)
     private ZonedDateTime fecha;
 
     /**
-     * The patient's temperatura in the control
+     * The patient's temperatura in the control.
      */
     @Getter
     @DatabaseField(canBeNull = false)
     private Double temperatura;
 
     /**
-     * The peso of the patient in the control
+     * The peso of the patient in the control.
      */
     @Getter
     @DatabaseField(canBeNull = false)
     private Double peso;
 
     /**
-     * The altura of the patient in the control
+     * The altura of the patient in the control.
      */
     @Getter
     @DatabaseField(canBeNull = false)
     private Double altura;
 
     /**
-     * The patient's diagnostico
+     * The patient's diagnostico.
      */
     @Getter
     @DatabaseField(canBeNull = false)
     private String diagnostico;
 
     /**
-     * The veterinario
+     * The veterinario.
      */
     @Getter
     @Setter
@@ -82,7 +86,7 @@ public class Control extends BaseEntity {
     private Persona veterinario;
 
     /**
-     * The ficha medica
+     * The ficha medica.
      */
     @Getter
     @Setter

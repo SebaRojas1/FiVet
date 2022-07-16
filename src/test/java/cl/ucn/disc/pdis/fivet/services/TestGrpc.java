@@ -51,7 +51,6 @@ public class TestGrpc {
     /**
      * Test the RPC
      * @param resources resources to use
-     * @throws IOException
      */
     @Test
     public void testGrpc(Resources resources) throws IOException, SQLException {
@@ -368,6 +367,20 @@ public class TestGrpc {
                         .build());
             });
 
+            // No fichaMedica
+            Assertions.assertThrows(StatusRuntimeException.class, () -> {
+                FichaMedicaReply fichaMedicaReply = stub.addControl(AddControlReq.newBuilder()
+                        .setControl(ControlEntity.newBuilder()
+                                .setFecha("2016-10-05T08:20:10+05:30[Asia/Kolkata]")
+                                .setAltura(1)
+                                .setVeterinario(veterinario)
+                                .setDiagnostico("bien de salud")
+                                .setPeso(2)
+                                .setTemperatura(3)
+                                .build())
+                        .build());
+            });
+
             // No temperatura
             Assertions.assertThrows(StatusRuntimeException.class, () -> {
                 FichaMedicaReply fichaMedicaReply = stub.addControl(AddControlReq.newBuilder()
@@ -517,22 +530,37 @@ public class TestGrpc {
         }
 
         // SearchFichaMedica
-        log.debug("Testing RetrieveFichaMedica ..");
+        log.debug("Testing SearchFichaMedica ..");
         {
-            // Wrong query
-            Assertions.assertThrows(StatusRuntimeException.class, () -> {
-                Iterator<FichaMedicaReply> fichaMedicaReply = stub.searchFichaMedica(SearchFichaMedicaReq.newBuilder()
-                        .setQuery("/////////////////")
-                        .build());
-            });
-
-            // Correct query
-            Iterator<FichaMedicaReply> fichaMedicaReply = stub.searchFichaMedica(SearchFichaMedicaReq.newBuilder()
+            // Numeric query
+            Iterator<FichaMedicaReply> fichaMedicaReplyList1 = stub.searchFichaMedica(SearchFichaMedicaReq.newBuilder()
                     .setQuery("1")
                     .build());
-            log.debug("PersonaReply: {}", fichaMedicaReply);
-            Assertions.assertEquals(1, fichaMedicaReply.next().getFichaMedica().getNumeroFicha()
+            FichaMedicaReply fichaMedicaReply1 = fichaMedicaReplyList1.next();
+            log.debug("First FichaMedica: {}", fichaMedicaReply1.getFichaMedica());
+            Assertions.assertEquals(1, fichaMedicaReply1.getFichaMedica().getNumeroFicha()
                     , "Wrong FichaMedica");
+
+            // NombrePaciente query
+            Iterator<FichaMedicaReply> fichaMedicaReplyList3 = stub.searchFichaMedica(SearchFichaMedicaReq.newBuilder()
+                    .setQuery("perrowuau")
+                    .build());
+            FichaMedicaReply fichaMedicaReply3 = fichaMedicaReplyList3.next();
+            log.debug("First FichaMedica: {}", fichaMedicaReply3.getFichaMedica());
+
+            // Nombre duenio query
+            Iterator<FichaMedicaReply> fichaMedicaReplyList4 = stub.searchFichaMedica(SearchFichaMedicaReq.newBuilder()
+                    .setQuery("Sebastian")
+                    .build());
+            FichaMedicaReply fichaMedicaReply4 = fichaMedicaReplyList4.next();
+            log.debug("First FichaMedica: {}", fichaMedicaReply4.getFichaMedica());
+
+            // Rut String query
+            Iterator<FichaMedicaReply> fichaMedicaReplyList6 = stub.searchFichaMedica(SearchFichaMedicaReq.newBuilder()
+                    .setQuery("20218430-8")
+                    .build());
+            FichaMedicaReply fichaMedicaReply6 = fichaMedicaReplyList6.next();
+            log.debug("First FichaMedica: {}", fichaMedicaReply6.getFichaMedica());
         }
     }
 

@@ -28,7 +28,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 /**
- * The model of the Foto object
+ * The model of the Foto object.
  *
  * @author Sebastian Rojas
  */
@@ -39,7 +39,7 @@ import lombok.NoArgsConstructor;
 public final class Foto extends BaseEntity {
 
     /**
-     * The Url of the image
+     * The Url of the image.
      */
     @Getter
     @DatabaseField(canBeNull = false)

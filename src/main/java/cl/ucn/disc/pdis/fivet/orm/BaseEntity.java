@@ -28,7 +28,7 @@ import lombok.NoArgsConstructor;
 import java.time.ZonedDateTime;
 
 /**
- * The model of the entity objects
+ * The model of the entity object.
  *
  * @author Sebastiàn Rojas
  */
@@ -38,21 +38,21 @@ import java.time.ZonedDateTime;
 public abstract class BaseEntity {
 
     /**
-     * The id of the entity
+     * The id of the entity.
      */
     @Getter
     @DatabaseField(generatedId = true)
     protected Integer id;
 
     /**
-     * date and time of the entity deleted
+     * date and time of the entity deleted.
      */
     @Getter
     @DatabaseField
     protected ZonedDateTime deletedAt;
 
     /**
-     * date and time of the entity created
+     * date and time of the entity created.
      */
     @Getter
     @DatabaseField(canBeNull = false)

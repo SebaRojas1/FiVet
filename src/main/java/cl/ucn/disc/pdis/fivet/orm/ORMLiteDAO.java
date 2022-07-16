@@ -35,34 +35,37 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- *
+ * ORMLiteDAO class.
  *
  * @author Sebastian Rojas
  * @param <T> the base entity
  */
 @Slf4j
-public final class ORMLiteDAO <T extends BaseEntity> implements DAO<T> {
+public final class ORMLiteDAO<T extends BaseEntity> implements DAO<T> {
 
     /**
-     * The real DAO (connection to ORMLite DAO)
+     * The real DAO (connection to ORMLite DAO).
      */
     private final Dao<T, Integer> dao;
 
     private static ConnectionSource cs;
+
     /**
-     * The constructor of ORMLiteDAO
+     * The constructor of ORMLiteDAO.
+     *
      * @param cs the connection to the database
      * @param clazz the type of T
      */
     @SneakyThrows(SQLException.class)
-    public ORMLiteDAO(@NonNull final ConnectionSource cs,@NonNull final Class<T> clazz) {
-        this.dao = DaoManager.createDao(cs,clazz);
+    public ORMLiteDAO(@NonNull final ConnectionSource cs, @NonNull final Class<T> clazz) {
+        this.dao = DaoManager.createDao(cs, clazz);
     }
 
     /**
-     * The builder of the connection source
+     * The builder of the connection source.
+     *
      * @param s to use
-     * @return
+     * @return the cs
      */
     @SneakyThrows
     public static ConnectionSource buildConnectionSource(String s) {
@@ -71,7 +74,8 @@ public final class ORMLiteDAO <T extends BaseEntity> implements DAO<T> {
     }
 
     /**
-     * Get optinal, T
+     * Get optinal, T.
+     *
      * @param id to search
      * @return a T
      */
@@ -90,7 +94,8 @@ public final class ORMLiteDAO <T extends BaseEntity> implements DAO<T> {
     }
 
     /**
-     * Get optional, T
+     * Get optional, T.
+     *
      * @param attrib the name of attribute
      * @param value the value
      * @return a T
@@ -100,15 +105,17 @@ public final class ORMLiteDAO <T extends BaseEntity> implements DAO<T> {
     public Optional<T> get(String attrib, Object value) {
         List<T> list = this.dao.queryForEq(attrib, value);
 
-        for (T t : list)
+        for (T t : list) {
             if (t.getDeletedAt() == null) {
                 return Optional.of(t);
             }
+        }
         return Optional.empty();
     }
 
     /**
-     * Get all the Ts
+     * Get all the Ts.
+     *
      * @return the List of T
      */
     @SneakyThrows(SQLException.class)
@@ -125,7 +132,8 @@ public final class ORMLiteDAO <T extends BaseEntity> implements DAO<T> {
     }
 
     /**
-     * Save a T
+     * Save a T.
+     *
      * @param t to save
      */
     @SneakyThrows(SQLException.class)
@@ -140,7 +148,8 @@ public final class ORMLiteDAO <T extends BaseEntity> implements DAO<T> {
     }
 
     /**
-     * Delete a T adding the delete date
+     * Delete a T adding the delete date.
+     *
      * @param t to delete
      */
     @SneakyThrows(SQLException.class)
@@ -156,7 +165,8 @@ public final class ORMLiteDAO <T extends BaseEntity> implements DAO<T> {
 
 
     /**
-     * Delete a T with id adding the delete date
+     * Delete a T with id adding the delete date.
+     *
      * @param id of the t to delete
      */
     @SneakyThrows(SQLException.class)
@@ -175,7 +185,7 @@ public final class ORMLiteDAO <T extends BaseEntity> implements DAO<T> {
     }
 
     /**
-     * Drop and create a new table
+     * Drop and create a new table.
      */
     @Override
     @SneakyThrows

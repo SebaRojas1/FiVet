@@ -30,7 +30,7 @@ import lombok.NoArgsConstructor;
 import java.time.ZonedDateTime;
 
 /**
- * The model of the examen object
+ * The model of the examen object.
  *
  * @author Sebastian Rojas
  */
@@ -41,14 +41,14 @@ import java.time.ZonedDateTime;
 public class Examen extends BaseEntity {
 
     /**
-     * The nombre of the examen
+     * The nombre of the examen.
      */
     @Getter
     @DatabaseField(canBeNull = false)
     private String nombre;
 
     /**
-     * The date the test was taken
+     * The date the test was taken.
      */
     @Getter
     @DatabaseField(canBeNull = false)

@@ -26,9 +26,9 @@ import io.grpc.ManagedChannelBuilder;
 import io.grpc.StatusRuntimeException;
 import lombok.extern.slf4j.Slf4j;
 */
-
+/*
 /**
- * The client of fivet
+ * The client of fivet.
  *
  * @author Sebastian Rojas
  */
